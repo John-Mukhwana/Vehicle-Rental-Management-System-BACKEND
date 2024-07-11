@@ -7,9 +7,6 @@
     "studio": "drizzle-kit studio",
     "push": "drizzle-kit push"
   },
-{
-  "type": "module"
-},
   "dependencies": {
     "@hono/node-server": "^1.11.2",
     "@hono/prometheus": "^1.0.1",
