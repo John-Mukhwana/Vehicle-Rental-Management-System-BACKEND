@@ -19,4 +19,6 @@ userRouter.post("/users", zValidator('json', userSchema, (result, c) => {
 //update a user
 userRouter.put("/users/:id", updateUser);
 userRouter.delete("/users/:id", deleteUser);
+
+module.exports = router;
 //https:domai.com/api/users?limit=10
