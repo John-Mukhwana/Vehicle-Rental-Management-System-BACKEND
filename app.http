@@ -5,14 +5,14 @@ GET http://localhost:8000/api/ok/
 ###
 
 GET http://localhost:8000/api/users/1
-Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqb2huQGdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsImV4cCI6MTcyMDYxMTY4NH0.5WOvlTmPgLKh01cJBY5hpufGRoQ9r0XmUeRv1E324NY
-###
+Authorization:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtd2FuZ2lAZ21haWwuY29tIiwicm9sZSI6ImFkbWluIiwiZXhwIjoxNzIwNzk3NTI5fQ.fsooeYl2tbk5uBiTZspUbYmcpPO5a8sX17_p1byfSno
 
+###
 POST http://localhost:8000/api/vehicleSpecifications
 Content-Type: application/json
 
 {
-    "vehicleId": 5,
+    "vehicleId": 4,
     "manufacturer": "Audi",
     "model": "A8",
     "year": 2021,
@@ -54,19 +54,20 @@ Content-Type: application/json
 
 {  
     
-    "fullName":"keith mwangi",
-    "email":"jon@gmail.com",
-    "password":"password"
-    
+    "userId":2 ,
+    "fullName":"john mwangi",
+    "email":"mwangi@gmail.com",
+    "password":"1234",
+     "role":"admin"
 }
 ###
 POST http://localhost:8000/api/auth/login
 Content-Type: application/json
 
 {
-   "email":"john@gmail.com",
-    "password":"password"
+   "email":"mwangi@gmail.com",
+    "password":"1234"
 
 }
 ###
-DELETE http://localhost:8000/api/vehicleSpecifications/5
+DELETE http://localhost:8000/api/bookings/5

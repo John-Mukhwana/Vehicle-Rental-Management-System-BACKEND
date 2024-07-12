@@ -38,7 +38,7 @@ export const createAuthUserService = async (user: TIAuthentication): Promise<str
     await db.insert(AuthenticationTable).values(user)
     return "User created successfully";
 }
-
+//For user login
 export const userLoginService = async (user: TSAuthentication) => {
     const { email, password } = user;
     return await db.query.AuthenticationTable.findFirst({

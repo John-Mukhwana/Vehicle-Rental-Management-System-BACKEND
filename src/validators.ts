@@ -99,9 +99,11 @@ export const loginUserSchema = z.object({
 })
 
 export const registerUserSchema = z.object({
+    userId: z.number(),
     fullName: z.string(),
     email: z.string(),
     password: z.string(),
+    role: z.string(),
 })
 
 

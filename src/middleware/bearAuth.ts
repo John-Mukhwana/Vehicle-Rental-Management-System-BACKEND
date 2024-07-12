@@ -3,7 +3,7 @@ import "dotenv/config";
 import { verify } from "hono/jwt";
 import { Context, Next } from "hono";
 
-// AUTHENTICATION MIDDLEWARE
+//AUTHENTICATION MIDDLEWARE
 export const verifyToken = async (token: string, secret: string) => {
     try {
         const decoded = await verify(token, secret);
