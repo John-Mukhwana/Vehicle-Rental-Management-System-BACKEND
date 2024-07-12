@@ -2,7 +2,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "vite build",
+    "build": "tsc",
     "start": "node dist/index.js",
     "studio": "drizzle-kit studio",
     "push": "drizzle-kit push"
