@@ -1,9 +1,8 @@
 {
   "type": "module",
   "scripts": {
-    "build": "React build --output public"
     "dev": "tsx watch src/index.ts",
-    "build": "tsc",
+    "build": "vite build",
     "start": "node dist/index.js",
     "studio": "drizzle-kit studio",
     "push": "drizzle-kit push"
