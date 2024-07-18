@@ -2,11 +2,12 @@ import { Hono } from "hono";
 import { listBookings, getBooking, createBooking, updateBooking, deleteBooking } from "./Booking.controller";
 import { zValidator } from "@hono/zod-validator";
 import { bookingSchema } from "../validators";
+import { adminRoleAuth, userOrAdminRoleAuth } from "../middleware/bearAuth";
 export const BookingRouter = new Hono();
 //get all users      api/users
-BookingRouter.get("/bookings", listBookings);
+BookingRouter.get("/bookings", adminRoleAuth, listBookings);
 //get a single user    api/users/1
-BookingRouter.get("/bookings/:id", getBooking);
+BookingRouter.get("/bookings/:id", userOrAdminRoleAuth, getBooking);
 // create a user 
 BookingRouter.post("/bookings", zValidator('json', bookingSchema, (result, c) => {
     if (!result.success) {

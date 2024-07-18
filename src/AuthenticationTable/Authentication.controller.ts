@@ -83,7 +83,7 @@ export const deleteAuthentication = async (c: Context) => {
     }
 }
 
-//login Aunthentication
+//Register Aunthentication
 
 export const registerUser = async (c: Context) => {
     try {

@@ -4,70 +4,37 @@ GET http://localhost:8000/api/ok/
 
 ###
 
-GET http://localhost:8000/api/users/1
-Authorization:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtd2FuZ2lAZ21haWwuY29tIiwicm9sZSI6ImFkbWluIiwiZXhwIjoxNzIwNzk3NTI5fQ.fsooeYl2tbk5uBiTZspUbYmcpPO5a8sX17_p1byfSno
-
+GET http://localhost:8000/api/vehicles
+Authorization:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJCcmFkQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwiZXhwIjoxNzIxMTI2MTU0fQ.NtaQUICYhbRe-DQW2D3W8AlUAy5bX3bE26V985ncfr0
 ###
-POST http://localhost:8000/api/vehicleSpecifications
+POST http://localhost:8000/api/users
 Content-Type: application/json
 
 {
-    "vehicleId": 4,
-    "manufacturer": "Audi",
-    "model": "A8",
-    "year": 2021,
-    "fuelType": "petrol",
-    "engineCapacity": "3.0L",
-    "transmission": "automatic",
-    "seatingCapacity": 5,
-    "color": "black",
-    "features": [
-        "Leather seats",
-        "sunroof",
-        "navigation system",
-        "parking sensors",
-        "rear camera",
-        "heated seats",
-        "heated steering wheel",
-        "adaptive cruise control",
-        "lane departure warning",
-        "blind spot monitoring",
-        "automatic emergency braking",
-        "forward collision warning",
-        "automatic high-beam headlights",
-        "rain-sensing wipers",
-        "dual-zone automatic climate control",
-        "power-adjustable front seats",
-        "memory driver's seat",
-        "power-adjustable steering wheel",
-        "power-folding rear seats",
-        "power liftgate",
-        "keyless entry",
-        "push-button start",
-        "remote start"
-        ]
+    "userId": 81,
+    "fullName": "John Bright",
+    "email": "jok@gmail.com",
+    "contactPhone": "011237468",
+    "address": "kutus"
 }
 
-###
+###User Registration
 POST http://localhost:8000/api/auth/register
 Content-Type: application/json
 
-{  
-    
-    "userId":2 ,
-    "fullName":"john mwangi",
-    "email":"mwangi@gmail.com",
-    "password":"1234",
-     "role":"admin"
+{   "userId":14,
+    "fullName":"Jo Bradley",
+    "email":"no@gmail.com",
+    "password":"1234"
 }
 ###
 POST http://localhost:8000/api/auth/login
 Content-Type: application/json
 
 {
-   "email":"mwangi@gmail.com",
+   "email":"jo@gmail.com",
     "password":"1234"
 
 }
 ###
-DELETE http://localhost:8000/api/bookings/5
+DELETE http://localhost:8000/api/users/90

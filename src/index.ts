@@ -18,11 +18,21 @@ import { locationAndBranchesRouter } from './Location And Branches/LocationAndBr
 import { fleetManagementRouter } from './Fleet Management/FleetManagement.router'
 import { authenticationRouter } from './AuthenticationTable/Authentication.router'
 import { authRouter } from './AuthenticationTable/Authentication.router'
+import {cors} from 'hono/cors'
+import paymentsRouter from './paymentRoutes/paymentRoute';
+import webhookRouter from './paymentRoutes/webhookRoute';
 
 import  assert from 'assert' 
 
 
 const app = new Hono().basePath('/api')
+// app.use('/*', cors())
+app.use('*', cors({
+  origin: ['http://localhost:5174','http://localhost:5173'], // Your frontend URL
+  allowMethods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowHeaders: ['Content-Type', 'Authorization'],
+}));
+
 
 const customTimeoutException = () =>
   new HTTPException(408, {
@@ -75,6 +85,8 @@ app.route("/",locationAndBranchesRouter)
 app.route("/",fleetManagementRouter)
 app.route("/",authenticationRouter)
 app.route("auth/", authRouter)   // api/auth/register   or api/auth/login
+app.route("/",paymentsRouter)
+app.route("/",webhookRouter)
 
 
 assert(process.env.PORT, "PORT is not set in the .env file")
@@ -84,3 +96,4 @@ serve({
   port: Number(process.env.PORT )
 })
 console.log(`Server is running on port ${process.env.PORT} 📢`)
+

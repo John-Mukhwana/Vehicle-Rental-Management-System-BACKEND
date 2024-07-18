@@ -6,9 +6,9 @@ import { adminRoleAuth, userOrAdminRoleAuth } from "../middleware/bearAuth";
 export const paymentRouter = new Hono();
 
 //get all users      api/users
-paymentRouter.get("/payments",adminRoleAuth, listPayments);
+paymentRouter.get("/payments", listPayments);
 //get a single user    api/users/1
-paymentRouter.get("/payments/:id",userOrAdminRoleAuth, getPayment)
+paymentRouter.get("/payments/:id", getPayment)
 // create a user 
 paymentRouter.post("/payments", zValidator('json', paymentSchema, (result, c) => {
     if (!result.success) {

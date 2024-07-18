@@ -4,16 +4,16 @@ import { relations } from 'drizzle-orm'
 
 const rolesEnum = pgEnum('roles', ['user', 'admin']);
 
-export const usersTable = pgTable('users', {
+export const usersTable: any = pgTable('users', {
   userId: serial('user_id').primaryKey(),
   fullName: varchar('full_name', { length: 255 }),
   email: varchar('email', { length: 255 }).unique(),
   contactPhone: varchar('contact_phone', { length: 15 }),
   address: varchar('address', { length: 255 }),
-  role: rolesEnum('role').default('user'), // Set default value here
-  createdAt: timestamp('created_at').notNull(),
-  updatedAt: timestamp('updated_at').notNull()
-});
+  role: rolesEnum('role').default('user'),
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow().$onUpdateFn(() => new Date())
+});        
  
 
 

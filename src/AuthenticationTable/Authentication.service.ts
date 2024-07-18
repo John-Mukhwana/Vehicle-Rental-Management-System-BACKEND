@@ -36,11 +36,11 @@ export const deleteAuthenticationService = async (id: number) => {
 
 export const createAuthUserService = async (user: TIAuthentication): Promise<string | null> => {
     await db.insert(AuthenticationTable).values(user)
-    return "User created successfully";
+    return "User Registered successfully";
 }
 //For user login
 export const userLoginService = async (user: TSAuthentication) => {
-    const { email, password } = user;
+    const { email, password,role } = user;
     return await db.query.AuthenticationTable.findFirst({
         columns: {
             email: true,

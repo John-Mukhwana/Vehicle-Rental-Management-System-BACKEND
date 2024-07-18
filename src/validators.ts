@@ -10,25 +10,21 @@ export const userSchema = z.object({
     email: z.string(),
     contactPhone: z.string(),
     address: z.string(),
-    role: z.string(),
-    createdAt: z.string(),
-    updatedAt: z.string()
 })
 
 export const bookingSchema = z.object({
-    bookingId: z.number(),
-    userId: z.number(),
-    vehicleId: z.number(),
-    locationId: z.number(),
-    bookingDate: z.string(),
-    returnDate: z.string(),
-    
-    createdAt: z.string(),
-    updatedAt: z.string()
-
-
-})
-
+    userId: z.number().min(1),
+    vehicleId: z.number().min(1),
+    locationId: z.number().min(1),
+    bookingDate: z.string().refine(value => !isNaN(Date.parse(value)), {
+      message: "Invalid date format"
+    }),
+    returnDate: z.string().refine(value => !isNaN(Date.parse(value)), {
+      message: "Invalid date format"
+    }),
+    totalAmount: z.string().min(1),
+    bookingStatus: z.enum(["Pending", "Confirmed", "Cancelled"]),
+  });
 export const vehicleSpecificationSchema = z.object({
 
     vehicleId: z.number(),
@@ -99,11 +95,9 @@ export const loginUserSchema = z.object({
 })
 
 export const registerUserSchema = z.object({
-    userId: z.number(),
     fullName: z.string(),
     email: z.string(),
-    password: z.string(),
-    role: z.string(),
+    password: z.string()
 })
 
 

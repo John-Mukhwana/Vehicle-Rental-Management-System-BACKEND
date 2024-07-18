@@ -31,6 +31,7 @@ export const createAuthUserService = async (user) => {
     await db.insert(AuthenticationTable).values(user);
     return "User created successfully";
 };
+//For user login
 export const userLoginService = async (user) => {
     const { email, password } = user;
     return await db.query.AuthenticationTable.findFirst({

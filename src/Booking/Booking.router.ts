@@ -6,7 +6,7 @@ import { adminRoleAuth,userOrAdminRoleAuth } from "../middleware/bearAuth";
 export const BookingRouter = new Hono();
 
 //get all users      api/users
-BookingRouter.get("/bookings",adminRoleAuth, listBookings);
+BookingRouter.get("/bookings", listBookings);
 //get a single user    api/users/1
 BookingRouter.get("/bookings/:id",userOrAdminRoleAuth, getBooking)
 // create a user 

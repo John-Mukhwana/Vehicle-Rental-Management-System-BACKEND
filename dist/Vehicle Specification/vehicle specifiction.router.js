@@ -6,6 +6,7 @@ import { adminRoleAuth, userRoleAuth } from "../middleware/bearAuth";
 export const vehicleSpecificationRouter = new Hono();
 //get all users      api/users
 vehicleSpecificationRouter.get("/vehicleSpecifications", adminRoleAuth, listVehicleSpecification);
+vehicleSpecificationRouter.get("/vehicleSpecifications/:id", adminRoleAuth, getVehicleSpecification);
 //get a single user    api/users/1
 vehicleSpecificationRouter.get("/vehicleSpecifications/:id", userRoleAuth, getVehicleSpecification);
 // create a user 

@@ -37,9 +37,7 @@ export const createUser = async (c: Context) => {
                 if (user.updatedAt) {
               user.updatedAt = new Date(user.updatedAt);
         }
-        const pass = user.password;
-        const hashedPassword = await bycrpt.hash(pass, 10);
-        user.password = hashedPassword;
+      
          const createdUser = await createUserService(user);
 
         if (!createdUser) return c.text("User not created", 404);
