@@ -46,6 +46,7 @@ export const VehiclesTable = pgTable("vehicles", {
     availability: varchar("availability"),
     createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at").defaultNow().$onUpdateFn(() => new Date()),
+    vehicleImage: varchar("vehicle_image", { length: 255 })
 });
 
 // Vehicle Relations
