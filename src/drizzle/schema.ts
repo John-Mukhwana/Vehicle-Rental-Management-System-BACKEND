@@ -2,6 +2,7 @@ import {pgTable, serial, text, varchar, integer, timestamp, boolean, decimal,pgE
 import { relations } from 'drizzle-orm'
 
 
+
 const rolesEnum = pgEnum('roles', ['user', 'admin']);
 
 export const usersTable: any = pgTable('users', {
@@ -12,7 +13,8 @@ export const usersTable: any = pgTable('users', {
   address: varchar('address', { length: 255 }),
   role: rolesEnum('role').default('user'),
   createdAt: timestamp('created_at').defaultNow(),
-  updatedAt: timestamp('updated_at').defaultNow().$onUpdateFn(() => new Date())
+  updatedAt: timestamp('updated_at').defaultNow().$onUpdateFn(() => new Date()),
+  profilePicture: varchar('profile_picture', { length: 255 })
 });        
  
 

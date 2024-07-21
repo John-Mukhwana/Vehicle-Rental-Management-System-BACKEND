@@ -22,6 +22,8 @@ export const vehiclesService = async (limit?: number): Promise<ExtendedTSVehicle
     const vehiclesWithRelatedData = await Promise.all(vehicles.map(async (vehicle) => {
         // Fetch vehicle specifications
         const specifications = await db.select({
+            manufacturer:VehicleSpecificationsTable.manufacturer,
+            model: VehicleSpecificationsTable.model,
             year: VehicleSpecificationsTable.year,
             fuelType: VehicleSpecificationsTable.fuelType,
             transmission: VehicleSpecificationsTable.transmission,
@@ -35,6 +37,8 @@ export const vehiclesService = async (limit?: number): Promise<ExtendedTSVehicle
         .execute();
 
         const specificationsData = specifications.length ? specifications[0] : {
+            manfacturer: '',
+            model: '',
             year: 0,
             fuelType: '',
             transmission: '',
@@ -133,12 +137,57 @@ export const getVehicleService = async (id: number): Promise<TSVehicle & { speci
 export const createVehicleService = async (vehicle: TIVehicle) => {
     await db.insert(VehiclesTable).values(vehicle)
     return "Vehicle created successfully";
-}
+};
 
-export const updateVehicleService = async (id: number, vehicle: TIVehicle) => {
-    await db.update(VehiclesTable).set(vehicle).where(eq(VehiclesTable.vehicleId, id))
+// export const updateVehicleService = async (id: number, vehicle: TIVehicle) => {
+//     await db.update(VehiclesTable).set(vehicle).where(eq(VehiclesTable.vehicleId, id))
+//     return "Vehicle updated successfully";
+// }
+// src/services/vehicleService.ts
+
+
+export const updateVehicleService = async (id: number, vehicle: TIVehicle & { specifications: any, fleetManagement: any }) => {
+  try {
+    // Start a transaction to ensure atomic updates
+    await db.transaction(async (trx) => {
+      // Update the main vehicle record
+      await trx.update(VehiclesTable)
+        .set({
+            vehicleId: vehicle.vehicleId,
+          // Assuming the table only needs to store the vehicle ID and maybe other fields
+          // If the VehiclesTable has other fields to update, include them here
+        })
+        .where(eq(VehiclesTable.vehicleId, id));
+
+      // Update related vehicle specifications
+      await trx.update(VehicleSpecificationsTable)
+        .set({
+          manufacturer: vehicle.specifications.manufacturer,
+          model: vehicle.specifications.model,
+          year: vehicle.specifications.year,
+          fuelType: vehicle.specifications.fuelType,
+          transmission: vehicle.specifications.transmission,
+          color: vehicle.specifications.color,
+          seatingCapacity: vehicle.specifications.seatingCapacity,
+          features: vehicle.specifications.features
+        })
+        .where(eq(VehicleSpecificationsTable.vehicleId, id)); // Ensure this is the correct key
+
+      // Update fleet management status
+      await trx.update(FleetManagementTable)
+        .set({
+          status: vehicle.fleetManagement.status
+        })
+        .where(eq(FleetManagementTable.vehicleId, id)); // Ensure this is the correct key
+    });
+
     return "Vehicle updated successfully";
-}
+  } catch (error) {
+    console.error('Error updating vehicle:', error);
+    throw new Error('Failed to update vehicle');
+  }
+};
+
 
 export const deleteVehicleService = async (id: number) => {
     await db.delete(VehiclesTable).where(eq(VehiclesTable.vehicleId, id))

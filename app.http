@@ -4,8 +4,8 @@ GET http://localhost:8000/api/ok/
 
 ###
 
-GET http://localhost:8000/api/vehicles
-Authorization:eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJCcmFkQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwiZXhwIjoxNzIxMTI2MTU0fQ.NtaQUICYhbRe-DQW2D3W8AlUAy5bX3bE26V985ncfr0
+GET http://localhost:8000/api/locationAndBranches
+Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqb0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3MjE1MTI1ODR9.K0vEsgMxKVMq2TKQEnhY7Qy4z7BaoyKyt0amZwpoyKg
 ###
 POST http://localhost:8000/api/users
 Content-Type: application/json
@@ -16,6 +16,21 @@ Content-Type: application/json
     "email": "jok@gmail.com",
     "contactPhone": "011237468",
     "address": "kutus"
+}
+###update
+PUT http://localhost:8000/api/fleets/1
+Content-Type: application/json
+
+{
+     "fleetId": 1,
+    "vehicleId": 2,
+    "acquisitionDate": "2024-07-06T21:12:37.906Z",
+    "depreciationRate": "3",
+    "currentValue": "34",
+    "maintenanceCost": "34",
+    "status": "active",
+    "createdAt": "2024-07-06T21:12:37.906Z",
+    "updatedAt": "2024-07-06T21:12:37.906Z"
 }
 
 ###User Registration
