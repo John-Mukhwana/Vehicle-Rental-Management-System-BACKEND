@@ -17,7 +17,15 @@ export const usersTable: any = pgTable('users', {
   profilePicture: varchar('profile_picture', { length: 255 })
 });        
  
-
+// User Relations
+export const usersRelations = relations(usersTable, ({ one, many }) => ({
+    profile: one(AuthenticationTable, {
+        fields: [usersTable.userId],
+        references: [AuthenticationTable.userId]
+    }),
+    bookings: many(BookingsTable),
+    customerSupportTickets: many(CustomerSupportTicketsTable),
+}))
 
 // Authentication Table
 export const AuthenticationTable = pgTable("authentication", {
@@ -96,12 +104,15 @@ export const BookingsTable = pgTable("bookings", {
     updatedAt: timestamp("updated_at").defaultNow().$onUpdateFn(() => new Date()),
 });
 
-// Bookings Relations
 export const bookingsRelations = relations(BookingsTable, ({ one }) => ({
     payments: one(PaymentsTable, {
         fields: [BookingsTable.bookingId],
         references: [PaymentsTable.bookingId]
     }),
+    user: one(usersTable, {
+        fields: [BookingsTable.userId], // Assuming bookingsTable has a userId field
+        references: [usersTable.userId]
+    })
 }));
 
 export const paymentStatusEnum = pgEnum("payment_status", ["Pending", "Completed", "Failed"]);
@@ -187,15 +198,7 @@ export const fleetManagementRelations = relations(FleetManagementTable, ({ one }
     }),
 }));
 
-// User Relations
-export const usersRelations = relations(usersTable, ({ one, many }) => ({
-    profile: one(AuthenticationTable, {
-        fields: [usersTable.userId],
-        references: [AuthenticationTable.userId]
-    }),
-    bookings: many(BookingsTable),
-    customerSupportTickets: many(CustomerSupportTicketsTable),
-}))
+
 
 
 // Types

@@ -4,10 +4,8 @@ GET http://localhost:8000/api/ok/
 
 ###
 
-GET http://localhost:8000/api/vehicles/1
-Authorization:Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqb0BnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3MjE2MDAxMDZ9.7BqhndcIqrD29NTpFEXKOTxpoXs8OSFNU891JlQLADo
-###
-POST http://localhost:8000/api/vehicles/1
+GET http://localhost:8000/api/bookings/2
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtdWt3YW5hQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwiZXhwIjoxNzIxNjg2MjE5fQ.kWhKTuOaIDqS441O0ponfUICLjlDCLFgTaonuzYt-SI
 Content-Type: application/json
 
 {

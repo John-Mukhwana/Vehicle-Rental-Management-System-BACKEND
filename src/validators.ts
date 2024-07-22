@@ -22,8 +22,8 @@ export const bookingSchema = z.object({
     returnDate: z.string().refine(value => !isNaN(Date.parse(value)), {
       message: "Invalid date format"
     }),
-    totalAmount: z.string().min(1),
-    bookingStatus: z.enum(["Pending", "Confirmed", "Cancelled"]),
+    totalAmount: z.string().min(1)
+    
   });
 export const vehicleSpecificationSchema = z.object({
 
