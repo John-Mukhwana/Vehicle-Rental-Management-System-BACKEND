@@ -1,12 +1,18 @@
-import { eq } from "drizzle-orm";
-import db from "../drizzle/db";
-import { VehiclesTable, VehicleSpecificationsTable } from '../drizzle/schema';
-import { FleetManagementTable } from '../drizzle/schema';
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.deleteVehicleService = exports.updateVehicleService = exports.createVehicleService = exports.getVehicleService = exports.vehiclesService = void 0;
+const drizzle_orm_1 = require("drizzle-orm");
+const db_1 = __importDefault(require("../drizzle/db"));
+const schema_1 = require("../drizzle/schema");
+const schema_2 = require("../drizzle/schema");
 // Adjust import based on your setup
-export const vehiclesService = async (limit) => {
+const vehiclesService = async (limit) => {
     // Fetch vehicle data
-    const vehiclesQuery = db.select()
-        .from(VehiclesTable);
+    const vehiclesQuery = db_1.default.select()
+        .from(schema_1.VehiclesTable);
     if (limit) {
         vehiclesQuery.limit(limit);
     }
@@ -17,18 +23,18 @@ export const vehiclesService = async (limit) => {
     // Fetch related data for each vehicle
     const vehiclesWithRelatedData = await Promise.all(vehicles.map(async (vehicle) => {
         // Fetch vehicle specifications
-        const specifications = await db.select({
-            manufacturer: VehicleSpecificationsTable.manufacturer,
-            model: VehicleSpecificationsTable.model,
-            year: VehicleSpecificationsTable.year,
-            fuelType: VehicleSpecificationsTable.fuelType,
-            transmission: VehicleSpecificationsTable.transmission,
-            color: VehicleSpecificationsTable.color,
-            seatingCapacity: VehicleSpecificationsTable.seatingCapacity,
-            features: VehicleSpecificationsTable.features,
+        const specifications = await db_1.default.select({
+            manufacturer: schema_1.VehicleSpecificationsTable.manufacturer,
+            model: schema_1.VehicleSpecificationsTable.model,
+            year: schema_1.VehicleSpecificationsTable.year,
+            fuelType: schema_1.VehicleSpecificationsTable.fuelType,
+            transmission: schema_1.VehicleSpecificationsTable.transmission,
+            color: schema_1.VehicleSpecificationsTable.color,
+            seatingCapacity: schema_1.VehicleSpecificationsTable.seatingCapacity,
+            features: schema_1.VehicleSpecificationsTable.features,
         })
-            .from(VehicleSpecificationsTable)
-            .where(eq(VehicleSpecificationsTable.vehicleId, vehicle.vehicleId))
+            .from(schema_1.VehicleSpecificationsTable)
+            .where((0, drizzle_orm_1.eq)(schema_1.VehicleSpecificationsTable.vehicleId, vehicle.vehicleId))
             .limit(1) // Ensure only one record is returned
             .execute();
         const specificationsData = specifications.length ? specifications[0] : {
@@ -42,11 +48,11 @@ export const vehiclesService = async (limit) => {
             features: '',
         };
         // Fetch fleet management data
-        const fleetManagement = await db.select({
-            status: FleetManagementTable.status,
+        const fleetManagement = await db_1.default.select({
+            status: schema_2.FleetManagementTable.status,
         })
-            .from(FleetManagementTable)
-            .where(eq(FleetManagementTable.vehicleId, vehicle.vehicleId))
+            .from(schema_2.FleetManagementTable)
+            .where((0, drizzle_orm_1.eq)(schema_2.FleetManagementTable.vehicleId, vehicle.vehicleId))
             .limit(1) // Ensure only one record is returned
             .execute();
         const fleetManagementData = fleetManagement.length ? fleetManagement[0] : {
@@ -60,6 +66,7 @@ export const vehiclesService = async (limit) => {
     }));
     return vehiclesWithRelatedData;
 };
+exports.vehiclesService = vehiclesService;
 // export const vehiclesService = async (limit?: number): Promise<TSVehicle[] | null> => {
 //     if (limit) {
 //         return await db.query.VehiclesTable.findMany({
@@ -68,11 +75,11 @@ export const vehiclesService = async (limit) => {
 //     }
 //     return await db.query.VehiclesTable.findMany();
 // }
-export const getVehicleService = async (id) => {
+const getVehicleService = async (id) => {
     // Fetch the vehicle data
-    const vehicle = await db.select()
-        .from(VehiclesTable)
-        .where(eq(VehiclesTable.vehicleId, id))
+    const vehicle = await db_1.default.select()
+        .from(schema_1.VehiclesTable)
+        .where((0, drizzle_orm_1.eq)(schema_1.VehiclesTable.vehicleId, id))
         .limit(1) // Ensure only one record is returned
         .execute(); // Execute the query
     if (!vehicle.length) { // Check if the result is empty
@@ -80,16 +87,16 @@ export const getVehicleService = async (id) => {
     }
     const vehicleData = vehicle[0]; // Get the first item from the array
     // Fetch the related vehicle specifications
-    const specifications = await db.select({
-        year: VehicleSpecificationsTable.year,
-        fuelType: VehicleSpecificationsTable.fuelType,
-        transmission: VehicleSpecificationsTable.transmission,
-        color: VehicleSpecificationsTable.color,
-        seatingCapacity: VehicleSpecificationsTable.seatingCapacity,
-        features: VehicleSpecificationsTable.features,
+    const specifications = await db_1.default.select({
+        year: schema_1.VehicleSpecificationsTable.year,
+        fuelType: schema_1.VehicleSpecificationsTable.fuelType,
+        transmission: schema_1.VehicleSpecificationsTable.transmission,
+        color: schema_1.VehicleSpecificationsTable.color,
+        seatingCapacity: schema_1.VehicleSpecificationsTable.seatingCapacity,
+        features: schema_1.VehicleSpecificationsTable.features,
     })
-        .from(VehicleSpecificationsTable)
-        .where(eq(VehicleSpecificationsTable.vehicleId, vehicleData.vehicleId))
+        .from(schema_1.VehicleSpecificationsTable)
+        .where((0, drizzle_orm_1.eq)(schema_1.VehicleSpecificationsTable.vehicleId, vehicleData.vehicleId))
         .limit(1) // Ensure only one record is returned
         .execute(); // Execute the query
     const specificationsData = specifications.length ? specifications[0] : {
@@ -100,11 +107,11 @@ export const getVehicleService = async (id) => {
         features: '',
     };
     // Fetch the related fleet management status
-    const fleetManagement = await db.select({
-        status: FleetManagementTable.status,
+    const fleetManagement = await db_1.default.select({
+        status: schema_2.FleetManagementTable.status,
     })
-        .from(FleetManagementTable)
-        .where(eq(FleetManagementTable.vehicleId, vehicleData.vehicleId))
+        .from(schema_2.FleetManagementTable)
+        .where((0, drizzle_orm_1.eq)(schema_2.FleetManagementTable.vehicleId, vehicleData.vehicleId))
         .limit(1) // Ensure only one record is returned
         .execute(); // Execute the query
     const fleetManagementData = fleetManagement.length ? fleetManagement[0] : {
@@ -116,14 +123,17 @@ export const getVehicleService = async (id) => {
         fleetManagement: fleetManagementData,
     };
 };
-export const createVehicleService = async (vehicle) => {
-    await db.insert(VehiclesTable).values(vehicle);
+exports.getVehicleService = getVehicleService;
+const createVehicleService = async (vehicle) => {
+    await db_1.default.insert(schema_1.VehiclesTable).values(vehicle);
     return "Vehicle created successfully";
 };
-export const updateVehicleService = async (id, vehicle) => {
-    await db.update(VehiclesTable).set(vehicle).where(eq(VehiclesTable.vehicleId, id));
+exports.createVehicleService = createVehicleService;
+const updateVehicleService = async (id, vehicle) => {
+    await db_1.default.update(schema_1.VehiclesTable).set(vehicle).where((0, drizzle_orm_1.eq)(schema_1.VehiclesTable.vehicleId, id));
     return "Vehicle updated successfully";
 };
+exports.updateVehicleService = updateVehicleService;
 // export const updateVehicleService = async (id: number, vehicle: TIVehicle & { specifications: any, fleetManagement: any }) => {
 //   try {
 //     // Start a transaction to ensure atomic updates
@@ -163,7 +173,8 @@ export const updateVehicleService = async (id, vehicle) => {
 //     throw new Error('Failed to update vehicle');
 //   }
 // };
-export const deleteVehicleService = async (id) => {
-    await db.delete(VehiclesTable).where(eq(VehiclesTable.vehicleId, id));
+const deleteVehicleService = async (id) => {
+    await db_1.default.delete(schema_1.VehiclesTable).where((0, drizzle_orm_1.eq)(schema_1.VehiclesTable.vehicleId, id));
     return "Vehicle deleted successfully";
 };
+exports.deleteVehicleService = deleteVehicleService;

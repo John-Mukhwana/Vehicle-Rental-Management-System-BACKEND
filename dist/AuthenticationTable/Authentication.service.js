@@ -1,45 +1,57 @@
-import { eq, sql } from "drizzle-orm";
-import db from "../drizzle/db";
-import { AuthenticationTable } from '../drizzle/schema';
-export const authenticationService = async (limit) => {
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.userLoginService = exports.createAuthUserService = exports.deleteAuthenticationService = exports.updateAuthenticationService = exports.createAuthenticationService = exports.getAuthenticationService = exports.authenticationService = void 0;
+const drizzle_orm_1 = require("drizzle-orm");
+const db_1 = __importDefault(require("../drizzle/db"));
+const schema_1 = require("../drizzle/schema");
+const authenticationService = async (limit) => {
     if (limit) {
-        return await db.query.AuthenticationTable.findMany({
+        return await db_1.default.query.AuthenticationTable.findMany({
             limit: limit
         });
     }
-    return await db.query.AuthenticationTable.findMany();
+    return await db_1.default.query.AuthenticationTable.findMany();
 };
-export const getAuthenticationService = async (id) => {
-    return await db.query.AuthenticationTable.findFirst({
-        where: eq(AuthenticationTable.authId, id)
+exports.authenticationService = authenticationService;
+const getAuthenticationService = async (id) => {
+    return await db_1.default.query.AuthenticationTable.findFirst({
+        where: (0, drizzle_orm_1.eq)(schema_1.AuthenticationTable.authId, id)
     });
 };
-export const createAuthenticationService = async (authentication) => {
-    await db.insert(AuthenticationTable).values(authentication);
+exports.getAuthenticationService = getAuthenticationService;
+const createAuthenticationService = async (authentication) => {
+    await db_1.default.insert(schema_1.AuthenticationTable).values(authentication);
     return "Authentication created successfully";
 };
-export const updateAuthenticationService = async (id, authentication) => {
-    await db.update(AuthenticationTable).set(authentication).where(eq(AuthenticationTable.authId, id));
+exports.createAuthenticationService = createAuthenticationService;
+const updateAuthenticationService = async (id, authentication) => {
+    await db_1.default.update(schema_1.AuthenticationTable).set(authentication).where((0, drizzle_orm_1.eq)(schema_1.AuthenticationTable.authId, id));
     return "Athentication updated successfully";
 };
-export const deleteAuthenticationService = async (id) => {
-    await db.delete(AuthenticationTable).where(eq(AuthenticationTable.authId, id));
+exports.updateAuthenticationService = updateAuthenticationService;
+const deleteAuthenticationService = async (id) => {
+    await db_1.default.delete(schema_1.AuthenticationTable).where((0, drizzle_orm_1.eq)(schema_1.AuthenticationTable.authId, id));
     return "Authentication deleted successfully";
 };
+exports.deleteAuthenticationService = deleteAuthenticationService;
 //For user registration
-export const createAuthUserService = async (user) => {
-    await db.insert(AuthenticationTable).values(user);
+const createAuthUserService = async (user) => {
+    await db_1.default.insert(schema_1.AuthenticationTable).values(user);
     return "User Registered successfully";
 };
+exports.createAuthUserService = createAuthUserService;
 //For user login
-export const userLoginService = async (user) => {
+const userLoginService = async (user) => {
     const { email, password, role } = user;
-    return await db.query.AuthenticationTable.findFirst({
+    return await db_1.default.query.AuthenticationTable.findFirst({
         columns: {
             email: true,
             role: true,
             password: true
-        }, where: sql ` ${AuthenticationTable.email} = ${email}`,
+        }, where: (0, drizzle_orm_1.sql) ` ${schema_1.AuthenticationTable.email} = ${email}`,
         with: {
             users: {
                 columns: {
@@ -52,3 +64,4 @@ export const userLoginService = async (user) => {
         }
     });
 };
+exports.userLoginService = userLoginService;

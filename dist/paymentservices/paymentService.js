@@ -1,8 +1,14 @@
+"use strict";
 // import db from "../drizzle/db";
 // import { BookingsTable, PaymentsTable } from "../drizzle/schema";
 // import Stripe from "stripe";
 // import dotenv from 'dotenv/config';
 // import { eq } from "drizzle-orm";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.updateBookingStatus = exports.createCheckoutSession = void 0;
 // const stripe = new Stripe(process.env.STRIPE_SECRET_API_KEY as string, {
 //     apiVersion: '2024-06-20',
 // });
@@ -56,17 +62,17 @@
 //         bookingStatus: status
 //     }).where(eq(BookingsTable.bookingId, bookingId)).execute();
 // };
-import db from "../drizzle/db";
-import { BookingsTable, PaymentsTable } from "../drizzle/schema";
-import Stripe from "stripe";
-import { eq } from "drizzle-orm";
-const stripe = new Stripe(process.env.STRIPE_SECRET_API_KEY, {
+const db_1 = __importDefault(require("../drizzle/db"));
+const schema_1 = require("../drizzle/schema");
+const stripe_1 = __importDefault(require("stripe"));
+const drizzle_orm_1 = require("drizzle-orm");
+const stripe = new stripe_1.default(process.env.STRIPE_SECRET_API_KEY, {
     apiVersion: '2024-06-20',
 });
-export const createCheckoutSession = async (amount, currency, bookingId) => {
+const createCheckoutSession = async (amount, currency, bookingId) => {
     // Check if the bookingId exists in the BookingsTable
-    const booking = await db.query.BookingsTable.findFirst({
-        where: eq(BookingsTable.bookingId, bookingId),
+    const booking = await db_1.default.query.BookingsTable.findFirst({
+        where: (0, drizzle_orm_1.eq)(schema_1.BookingsTable.bookingId, bookingId),
     });
     if (!booking) {
         throw new Error(`Booking with ID ${bookingId} not found`);
@@ -94,7 +100,7 @@ export const createCheckoutSession = async (amount, currency, bookingId) => {
         }
     });
     // Insert payment record with 'Pending' status
-    await db.insert(PaymentsTable).values({
+    await db_1.default.insert(schema_1.PaymentsTable).values({
         userId: booking.userId, // Adjust to reflect the actual userId from the booking
         bookingId,
         amount: amount.toString(),
@@ -103,13 +109,15 @@ export const createCheckoutSession = async (amount, currency, bookingId) => {
         transactionId: session.id,
     }).execute();
     // Update the booking with the total amount
-    await db.update(BookingsTable).set({
+    await db_1.default.update(schema_1.BookingsTable).set({
         totalAmount: amount.toString(), // Ensure the bookings table has a totalAmount field
-    }).where(eq(BookingsTable.bookingId, bookingId)).execute();
+    }).where((0, drizzle_orm_1.eq)(schema_1.BookingsTable.bookingId, bookingId)).execute();
     return session;
 };
-export const updateBookingStatus = async (bookingId, status) => {
-    await db.update(BookingsTable).set({
+exports.createCheckoutSession = createCheckoutSession;
+const updateBookingStatus = async (bookingId, status) => {
+    await db_1.default.update(schema_1.BookingsTable).set({
         bookingStatus: status
-    }).where(eq(BookingsTable.bookingId, bookingId)).execute();
+    }).where((0, drizzle_orm_1.eq)(schema_1.BookingsTable.bookingId, bookingId)).execute();
 };
+exports.updateBookingStatus = updateBookingStatus;

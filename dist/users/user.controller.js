@@ -1,9 +1,12 @@
-import { usersService, getUserService, createUserService, updateUserService, deleteUserService } from "./user.service";
-export const listUsers = async (c) => {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.deleteUser = exports.updateUser = exports.createUser = exports.getUser = exports.listUsers = void 0;
+const user_service_1 = require("./user.service");
+const listUsers = async (c) => {
     try {
         //limit the number of users to be returned
         const limit = Number(c.req.query('limit'));
-        const data = await usersService(limit);
+        const data = await (0, user_service_1.usersService)(limit);
         if (data == null || data.length == 0) {
             return c.text("User not found", 404);
         }
@@ -13,17 +16,19 @@ export const listUsers = async (c) => {
         return c.json({ error: error?.message }, 400);
     }
 };
-export const getUser = async (c) => {
+exports.listUsers = listUsers;
+const getUser = async (c) => {
     const id = parseInt(c.req.param("id"));
     if (isNaN(id))
         return c.text("Invalid ID", 400);
-    const user = await getUserService(id);
+    const user = await (0, user_service_1.getUserService)(id);
     if (user == undefined) {
         return c.text("User not found", 404);
     }
     return c.json(user, 200);
 };
-export const createUser = async (c) => {
+exports.getUser = getUser;
+const createUser = async (c) => {
     try {
         const user = await c.req.json();
         // Convert date strings to Date objects
@@ -33,7 +38,7 @@ export const createUser = async (c) => {
         if (user.updatedAt) {
             user.updatedAt = new Date(user.updatedAt);
         }
-        const createdUser = await createUserService(user);
+        const createdUser = await (0, user_service_1.createUserService)(user);
         if (!createdUser)
             return c.text("User not created", 404);
         return c.json({ msg: createdUser }, 201);
@@ -42,7 +47,8 @@ export const createUser = async (c) => {
         return c.json({ error: error?.message }, 400);
     }
 };
-export const updateUser = async (c) => {
+exports.createUser = createUser;
+const updateUser = async (c) => {
     const id = parseInt(c.req.param("id"));
     if (isNaN(id))
         return c.text("Invalid ID", 400);
@@ -56,11 +62,11 @@ export const updateUser = async (c) => {
     }
     try {
         // search for the user
-        const searchedUser = await getUserService(id);
+        const searchedUser = await (0, user_service_1.getUserService)(id);
         if (searchedUser == undefined)
             return c.text("User not found", 404);
         // get the data and update it
-        const res = await updateUserService(id, user);
+        const res = await (0, user_service_1.updateUserService)(id, user);
         // return a success message
         if (!res)
             return c.text("User not updated", 404);
@@ -70,17 +76,18 @@ export const updateUser = async (c) => {
         return c.json({ error: error?.message }, 400);
     }
 };
-export const deleteUser = async (c) => {
+exports.updateUser = updateUser;
+const deleteUser = async (c) => {
     const id = Number(c.req.param("id"));
     if (isNaN(id))
         return c.text("Invalid ID", 400);
     try {
         //search for the user
-        const user = await getUserService(id);
+        const user = await (0, user_service_1.getUserService)(id);
         if (user == undefined)
             return c.text("User not found", 404);
         //deleting the user
-        const res = await deleteUserService(id);
+        const res = await (0, user_service_1.deleteUserService)(id);
         if (!res)
             return c.text("User not deleted", 404);
         return c.json({ msg: res }, 201);
@@ -89,3 +96,4 @@ export const deleteUser = async (c) => {
         return c.json({ error: error?.message }, 400);
     }
 };
+exports.deleteUser = deleteUser;

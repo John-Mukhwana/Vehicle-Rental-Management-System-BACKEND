@@ -1,9 +1,12 @@
-import { FleetManagementService, getFleetManagementService, createFleetManagementService, updateFleetManagementService, deleteFleetManagementService } from './FleetManagement.service';
-export const listFleetManagement = async (c) => {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.deleteFleetManagement = exports.updateFleetManagement = exports.createFleetManagement = exports.getFleetManagement = exports.listFleetManagement = void 0;
+const FleetManagement_service_1 = require("./FleetManagement.service");
+const listFleetManagement = async (c) => {
     try {
         //limit the number of users to be returned
         const limit = Number(c.req.query('limit'));
-        const data = await FleetManagementService(limit);
+        const data = await (0, FleetManagement_service_1.FleetManagementService)(limit);
         if (data == null || data.length == 0) {
             return c.text("Fleet Management not found", 404);
         }
@@ -13,17 +16,19 @@ export const listFleetManagement = async (c) => {
         return c.json({ error: error?.message }, 400);
     }
 };
-export const getFleetManagement = async (c) => {
+exports.listFleetManagement = listFleetManagement;
+const getFleetManagement = async (c) => {
     const id = parseInt(c.req.param("id"));
     if (isNaN(id))
         return c.text("Invalid ID", 400);
-    const FleetManagement = await getFleetManagementService(id);
+    const FleetManagement = await (0, FleetManagement_service_1.getFleetManagementService)(id);
     if (FleetManagement == undefined) {
         return c.text("Fleet Management not found", 404);
     }
     return c.json(FleetManagement, 200);
 };
-export const createFleetManagement = async (c) => {
+exports.getFleetManagement = getFleetManagement;
+const createFleetManagement = async (c) => {
     try {
         const FleetManagement = await c.req.json();
         // Convert date strings to Date objects
@@ -36,7 +41,7 @@ export const createFleetManagement = async (c) => {
         if (FleetManagement.acquisitionDate) {
             FleetManagement.acquisitionDate = new Date(FleetManagement.acquisitionDate);
         }
-        const createdFleetManagement = await createFleetManagementService(FleetManagement);
+        const createdFleetManagement = await (0, FleetManagement_service_1.createFleetManagementService)(FleetManagement);
         if (!createdFleetManagement)
             return c.text("Fleet Management not created", 404);
         return c.json({ msg: createdFleetManagement }, 201);
@@ -45,7 +50,8 @@ export const createFleetManagement = async (c) => {
         return c.json({ error: error?.message }, 400);
     }
 };
-export const updateFleetManagement = async (c) => {
+exports.createFleetManagement = createFleetManagement;
+const updateFleetManagement = async (c) => {
     const id = parseInt(c.req.param("id"));
     if (isNaN(id))
         return c.text("Invalid ID", 400);
@@ -62,11 +68,11 @@ export const updateFleetManagement = async (c) => {
     }
     try {
         // search for the user
-        const searchedFleetManagement = await getFleetManagementService(id);
+        const searchedFleetManagement = await (0, FleetManagement_service_1.getFleetManagementService)(id);
         if (searchedFleetManagement == undefined)
             return c.text("Fleet Management not found", 404);
         // get the data and update it
-        const res = await updateFleetManagementService(id, FleetManagement);
+        const res = await (0, FleetManagement_service_1.updateFleetManagementService)(id, FleetManagement);
         // return a success message
         if (!res)
             return c.text("Fleet Management not updated", 404);
@@ -76,17 +82,18 @@ export const updateFleetManagement = async (c) => {
         return c.json({ error: error?.message }, 400);
     }
 };
-export const deleteFleetManagement = async (c) => {
+exports.updateFleetManagement = updateFleetManagement;
+const deleteFleetManagement = async (c) => {
     const id = Number(c.req.param("id"));
     if (isNaN(id))
         return c.text("Invalid ID", 400);
     try {
         //search for the user
-        const FleetManagement = await getFleetManagementService(id);
+        const FleetManagement = await (0, FleetManagement_service_1.getFleetManagementService)(id);
         if (FleetManagement == undefined)
             return c.text("Fleet Management not found", 404);
         //deleting the user
-        const res = await deleteFleetManagementService(id);
+        const res = await (0, FleetManagement_service_1.deleteFleetManagementService)(id);
         if (!res)
             return c.text("FleetManagement not deleted", 404);
         return c.json({ msg: res }, 201);
@@ -95,3 +102,4 @@ export const deleteFleetManagement = async (c) => {
         return c.json({ error: error?.message }, 400);
     }
 };
+exports.deleteFleetManagement = deleteFleetManagement;

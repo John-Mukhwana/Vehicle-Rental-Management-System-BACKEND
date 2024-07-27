@@ -1,182 +1,185 @@
-import { pgTable, serial, text, varchar, integer, timestamp, pgEnum } from "drizzle-orm/pg-core";
-import { relations } from 'drizzle-orm';
-const rolesEnum = pgEnum('roles', ['user', 'admin']);
-export const usersTable = pgTable('users', {
-    userId: serial('user_id').primaryKey(),
-    fullName: varchar('full_name', { length: 255 }),
-    email: varchar('email', { length: 255 }).unique(),
-    contactPhone: varchar('contact_phone', { length: 15 }),
-    address: varchar('address', { length: 255 }),
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.fleetManagementRelations = exports.FleetManagementTable = exports.locationAndBranchesRelations = exports.LocationAndBranchesTable = exports.customerSupportTicketsRelations = exports.CustomerSupportTicketsTable = exports.ticketStatusEnum = exports.paymentsRelations = exports.PaymentsTable = exports.paymentStatusEnum = exports.bookingsRelations = exports.BookingsTable = exports.bookingStatusEnum = exports.vehicleSpecificationsRelations = exports.VehicleSpecificationsTable = exports.vehiclesRelations = exports.VehiclesTable = exports.authenticationRelations = exports.AuthenticationTable = exports.usersRelations = exports.usersTable = void 0;
+const pg_core_1 = require("drizzle-orm/pg-core");
+const drizzle_orm_1 = require("drizzle-orm");
+const rolesEnum = (0, pg_core_1.pgEnum)('roles', ['user', 'admin']);
+exports.usersTable = (0, pg_core_1.pgTable)('users', {
+    userId: (0, pg_core_1.serial)('user_id').primaryKey(),
+    fullName: (0, pg_core_1.varchar)('full_name', { length: 255 }),
+    email: (0, pg_core_1.varchar)('email', { length: 255 }).unique(),
+    contactPhone: (0, pg_core_1.varchar)('contact_phone', { length: 15 }),
+    address: (0, pg_core_1.varchar)('address', { length: 255 }),
     role: rolesEnum('role').default('user'),
-    createdAt: timestamp('created_at').defaultNow(),
-    updatedAt: timestamp('updated_at').defaultNow().$onUpdateFn(() => new Date()),
-    profilePicture: varchar('profile_picture', { length: 255 })
+    createdAt: (0, pg_core_1.timestamp)('created_at').defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)('updated_at').defaultNow().$onUpdateFn(() => new Date()),
+    profilePicture: (0, pg_core_1.varchar)('profile_picture', { length: 255 })
 });
 // User Relations
-export const usersRelations = relations(usersTable, ({ one, many }) => ({
-    profile: one(AuthenticationTable, {
-        fields: [usersTable.userId],
-        references: [AuthenticationTable.userId]
+exports.usersRelations = (0, drizzle_orm_1.relations)(exports.usersTable, ({ one, many }) => ({
+    profile: one(exports.AuthenticationTable, {
+        fields: [exports.usersTable.userId],
+        references: [exports.AuthenticationTable.userId]
     }),
-    bookings: many(BookingsTable),
-    customerSupportTickets: many(CustomerSupportTicketsTable),
+    bookings: many(exports.BookingsTable),
+    customerSupportTickets: many(exports.CustomerSupportTicketsTable),
 }));
 // Authentication Table
-export const AuthenticationTable = pgTable("authentication", {
-    authId: serial("auth_id").primaryKey(),
-    userId: integer("user_id").notNull().references(() => usersTable.userId, { onDelete: "cascade" }),
-    email: varchar("email", { length: 256 }).unique().notNull().references(() => usersTable.email, { onDelete: "cascade" }),
+exports.AuthenticationTable = (0, pg_core_1.pgTable)("authentication", {
+    authId: (0, pg_core_1.serial)("auth_id").primaryKey(),
+    userId: (0, pg_core_1.integer)("user_id").notNull().references(() => exports.usersTable.userId, { onDelete: "cascade" }),
+    email: (0, pg_core_1.varchar)("email", { length: 256 }).unique().notNull().references(() => exports.usersTable.email, { onDelete: "cascade" }),
     role: rolesEnum("role").default("user"),
-    password: varchar("password", { length: 256 }),
-    createdAt: timestamp("created_at").defaultNow(),
-    updatedAt: timestamp("updated_at").defaultNow()
+    password: (0, pg_core_1.varchar)("password", { length: 256 }),
+    createdAt: (0, pg_core_1.timestamp)("created_at").defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at").defaultNow()
 });
 // Authentication Relations
-export const authenticationRelations = relations(AuthenticationTable, ({ one }) => ({
-    users: one(usersTable, {
-        fields: [AuthenticationTable.userId],
-        references: [usersTable.userId]
+exports.authenticationRelations = (0, drizzle_orm_1.relations)(exports.AuthenticationTable, ({ one }) => ({
+    users: one(exports.usersTable, {
+        fields: [exports.AuthenticationTable.userId],
+        references: [exports.usersTable.userId]
     }),
 }));
 // Vehicles Table
-export const VehiclesTable = pgTable("vehicles", {
-    vehicleSpecId: serial("vehicle_spec_id").primaryKey(),
-    vehicleId: integer("vehicle_id").notNull().references(() => VehicleSpecificationsTable.vehicleId, { onDelete: "cascade" }),
-    rentalRate: integer("rental_rate"),
-    availability: varchar("availability"),
-    createdAt: timestamp("created_at").defaultNow(),
-    updatedAt: timestamp("updated_at").defaultNow().$onUpdateFn(() => new Date()),
-    vehicleImage: varchar("vehicle_image", { length: 255 })
+exports.VehiclesTable = (0, pg_core_1.pgTable)("vehicles", {
+    vehicleSpecId: (0, pg_core_1.serial)("vehicle_spec_id").primaryKey(),
+    vehicleId: (0, pg_core_1.integer)("vehicle_id").notNull().references(() => exports.VehicleSpecificationsTable.vehicleId, { onDelete: "cascade" }),
+    rentalRate: (0, pg_core_1.integer)("rental_rate"),
+    availability: (0, pg_core_1.varchar)("availability"),
+    createdAt: (0, pg_core_1.timestamp)("created_at").defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at").defaultNow().$onUpdateFn(() => new Date()),
+    vehicleImage: (0, pg_core_1.varchar)("vehicle_image", { length: 255 })
 });
 // Vehicle Relations
-export const vehiclesRelations = relations(VehiclesTable, ({ one, many }) => ({
-    vehicleSpecifications: one(VehicleSpecificationsTable, {
-        fields: [VehiclesTable.vehicleId],
-        references: [VehicleSpecificationsTable.vehicleId]
+exports.vehiclesRelations = (0, drizzle_orm_1.relations)(exports.VehiclesTable, ({ one, many }) => ({
+    vehicleSpecifications: one(exports.VehicleSpecificationsTable, {
+        fields: [exports.VehiclesTable.vehicleId],
+        references: [exports.VehicleSpecificationsTable.vehicleId]
     }),
-    bookings: many(BookingsTable),
-    fleetManagement: many(FleetManagementTable),
-    payments: many(PaymentsTable),
+    bookings: many(exports.BookingsTable),
+    fleetManagement: many(exports.FleetManagementTable),
+    payments: many(exports.PaymentsTable),
 }));
 // Vehicle Specifications Table
-export const VehicleSpecificationsTable = pgTable("vehicle_specifications", {
-    vehicleId: serial("vehicle_id").primaryKey(),
-    manufacturer: varchar("manufacturer", { length: 256 }),
-    model: varchar("model", { length: 256 }),
-    year: integer("year"),
-    fuelType: varchar("fuel_type", { length: 50 }),
-    engineCapacity: varchar("engine_capacity", { length: 50 }),
-    transmission: varchar("transmission", { length: 50 }),
-    seatingCapacity: integer("seating_capacity"),
-    color: varchar("color", { length: 50 }),
-    features: text("features"),
+exports.VehicleSpecificationsTable = (0, pg_core_1.pgTable)("vehicle_specifications", {
+    vehicleId: (0, pg_core_1.serial)("vehicle_id").primaryKey(),
+    manufacturer: (0, pg_core_1.varchar)("manufacturer", { length: 256 }),
+    model: (0, pg_core_1.varchar)("model", { length: 256 }),
+    year: (0, pg_core_1.integer)("year"),
+    fuelType: (0, pg_core_1.varchar)("fuel_type", { length: 50 }),
+    engineCapacity: (0, pg_core_1.varchar)("engine_capacity", { length: 50 }),
+    transmission: (0, pg_core_1.varchar)("transmission", { length: 50 }),
+    seatingCapacity: (0, pg_core_1.integer)("seating_capacity"),
+    color: (0, pg_core_1.varchar)("color", { length: 50 }),
+    features: (0, pg_core_1.text)("features"),
 });
 // Vehicle Specifications Relations
-export const vehicleSpecificationsRelations = relations(VehicleSpecificationsTable, ({ one }) => ({
-    vehicle: one(VehiclesTable, {
-        fields: [VehicleSpecificationsTable.vehicleId],
-        references: [VehiclesTable.vehicleId]
+exports.vehicleSpecificationsRelations = (0, drizzle_orm_1.relations)(exports.VehicleSpecificationsTable, ({ one }) => ({
+    vehicle: one(exports.VehiclesTable, {
+        fields: [exports.VehicleSpecificationsTable.vehicleId],
+        references: [exports.VehiclesTable.vehicleId]
     }),
 }));
-export const bookingStatusEnum = pgEnum("booking_status", ["Pending", "Confirmed", "Cancelled"]);
+exports.bookingStatusEnum = (0, pg_core_1.pgEnum)("booking_status", ["Pending", "Confirmed", "Cancelled"]);
 // Bookings Table
-export const BookingsTable = pgTable("bookings", {
-    bookingId: serial("booking_id").primaryKey(),
-    userId: integer("user_id").notNull().references(() => usersTable.userId, { onDelete: "cascade" }),
-    vehicleId: integer("vehicle_id").notNull().references(() => VehiclesTable.vehicleSpecId, { onDelete: "cascade" }),
-    locationId: integer("location_id").notNull().references(() => LocationAndBranchesTable.locationId, { onDelete: "cascade" }),
-    bookingDate: timestamp("booking_date").defaultNow(),
-    returnDate: timestamp("return_date"),
-    totalAmount: varchar("total_amount"),
-    bookingStatus: bookingStatusEnum("booking_status").default("Pending"),
-    createdAt: timestamp("created_at").defaultNow(),
-    updatedAt: timestamp("updated_at").defaultNow().$onUpdateFn(() => new Date()),
+exports.BookingsTable = (0, pg_core_1.pgTable)("bookings", {
+    bookingId: (0, pg_core_1.serial)("booking_id").primaryKey(),
+    userId: (0, pg_core_1.integer)("user_id").notNull().references(() => exports.usersTable.userId, { onDelete: "cascade" }),
+    vehicleId: (0, pg_core_1.integer)("vehicle_id").notNull().references(() => exports.VehiclesTable.vehicleSpecId, { onDelete: "cascade" }),
+    locationId: (0, pg_core_1.integer)("location_id").notNull().references(() => exports.LocationAndBranchesTable.locationId, { onDelete: "cascade" }),
+    bookingDate: (0, pg_core_1.timestamp)("booking_date").defaultNow(),
+    returnDate: (0, pg_core_1.timestamp)("return_date"),
+    totalAmount: (0, pg_core_1.varchar)("total_amount"),
+    bookingStatus: (0, exports.bookingStatusEnum)("booking_status").default("Pending"),
+    createdAt: (0, pg_core_1.timestamp)("created_at").defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at").defaultNow().$onUpdateFn(() => new Date()),
 });
-export const bookingsRelations = relations(BookingsTable, ({ one }) => ({
-    payments: one(PaymentsTable, {
-        fields: [BookingsTable.bookingId],
-        references: [PaymentsTable.bookingId]
+exports.bookingsRelations = (0, drizzle_orm_1.relations)(exports.BookingsTable, ({ one }) => ({
+    payments: one(exports.PaymentsTable, {
+        fields: [exports.BookingsTable.bookingId],
+        references: [exports.PaymentsTable.bookingId]
     }),
-    user: one(usersTable, {
-        fields: [BookingsTable.userId], // Assuming bookingsTable has a userId field
-        references: [usersTable.userId]
+    user: one(exports.usersTable, {
+        fields: [exports.BookingsTable.userId], // Assuming bookingsTable has a userId field
+        references: [exports.usersTable.userId]
     })
 }));
-export const paymentStatusEnum = pgEnum("payment_status", ["Pending", "Completed", "Failed"]);
+exports.paymentStatusEnum = (0, pg_core_1.pgEnum)("payment_status", ["Pending", "Completed", "Failed"]);
 // Payments Table
-export const PaymentsTable = pgTable("payments", {
-    paymentId: serial("payment_id").primaryKey(),
-    userId: integer("user_id").notNull().references(() => usersTable.userId, { onDelete: "cascade" }),
-    bookingId: integer("booking_id").notNull().references(() => BookingsTable.bookingId, { onDelete: "cascade" }),
-    amount: varchar("amount"),
-    paymentStatus: paymentStatusEnum("payment_status").default("Pending"),
-    paymentDate: timestamp("payment_date").defaultNow(),
-    paymentMethod: varchar("payment_method", { length: 50 }),
-    transactionId: varchar("transaction_id", { length: 256 }),
-    createdAt: timestamp("created_at").defaultNow(),
-    updatedAt: timestamp("updated_at").defaultNow().$onUpdateFn(() => new Date()),
+exports.PaymentsTable = (0, pg_core_1.pgTable)("payments", {
+    paymentId: (0, pg_core_1.serial)("payment_id").primaryKey(),
+    userId: (0, pg_core_1.integer)("user_id").notNull().references(() => exports.usersTable.userId, { onDelete: "cascade" }),
+    bookingId: (0, pg_core_1.integer)("booking_id").notNull().references(() => exports.BookingsTable.bookingId, { onDelete: "cascade" }),
+    amount: (0, pg_core_1.varchar)("amount"),
+    paymentStatus: (0, exports.paymentStatusEnum)("payment_status").default("Pending"),
+    paymentDate: (0, pg_core_1.timestamp)("payment_date").defaultNow(),
+    paymentMethod: (0, pg_core_1.varchar)("payment_method", { length: 50 }),
+    transactionId: (0, pg_core_1.varchar)("transaction_id", { length: 256 }),
+    createdAt: (0, pg_core_1.timestamp)("created_at").defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at").defaultNow().$onUpdateFn(() => new Date()),
 });
 // Payments Relations
-export const paymentsRelations = relations(PaymentsTable, ({ one }) => ({
-    booking: one(BookingsTable, {
-        fields: [PaymentsTable.bookingId],
-        references: [BookingsTable.bookingId]
+exports.paymentsRelations = (0, drizzle_orm_1.relations)(exports.PaymentsTable, ({ one }) => ({
+    booking: one(exports.BookingsTable, {
+        fields: [exports.PaymentsTable.bookingId],
+        references: [exports.BookingsTable.bookingId]
     }),
-    user: one(usersTable, {
-        fields: [PaymentsTable.userId],
-        references: [usersTable.userId]
+    user: one(exports.usersTable, {
+        fields: [exports.PaymentsTable.userId],
+        references: [exports.usersTable.userId]
     }),
 }));
-export const ticketStatusEnum = pgEnum("status", ["Open", "In Progress", "Resolved", "Closed"]);
+exports.ticketStatusEnum = (0, pg_core_1.pgEnum)("status", ["Open", "In Progress", "Resolved", "Closed"]);
 // Customer Support Tickets Table
-export const CustomerSupportTicketsTable = pgTable("customer_support_tickets", {
-    ticketId: serial("ticket_id").primaryKey(),
-    userId: integer("user_id").notNull().references(() => usersTable.userId, { onDelete: "cascade" }),
-    subject: varchar("subject", { length: 256 }),
-    description: text("description"),
-    status: ticketStatusEnum("status"),
-    createdAt: timestamp("created_at").defaultNow(),
-    updatedAt: timestamp("updated_at").defaultNow().$onUpdateFn(() => new Date()),
+exports.CustomerSupportTicketsTable = (0, pg_core_1.pgTable)("customer_support_tickets", {
+    ticketId: (0, pg_core_1.serial)("ticket_id").primaryKey(),
+    userId: (0, pg_core_1.integer)("user_id").notNull().references(() => exports.usersTable.userId, { onDelete: "cascade" }),
+    subject: (0, pg_core_1.varchar)("subject", { length: 256 }),
+    description: (0, pg_core_1.text)("description"),
+    status: (0, exports.ticketStatusEnum)("status"),
+    createdAt: (0, pg_core_1.timestamp)("created_at").defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at").defaultNow().$onUpdateFn(() => new Date()),
 });
 // Customer Support Tickets Relations
-export const customerSupportTicketsRelations = relations(CustomerSupportTicketsTable, ({ one }) => ({
-    user: one(usersTable, {
-        fields: [CustomerSupportTicketsTable.userId],
-        references: [usersTable.userId]
+exports.customerSupportTicketsRelations = (0, drizzle_orm_1.relations)(exports.CustomerSupportTicketsTable, ({ one }) => ({
+    user: one(exports.usersTable, {
+        fields: [exports.CustomerSupportTicketsTable.userId],
+        references: [exports.usersTable.userId]
     }),
 }));
 // Location and Branches Table
-export const LocationAndBranchesTable = pgTable("location_and_branches", {
-    locationId: serial("location_id").primaryKey(),
-    name: varchar("name", { length: 256 }),
-    address: varchar("address", { length: 512 }),
-    contactPhone: varchar("contact_phone", { length: 15 }),
-    createdAt: timestamp("created_at").defaultNow(),
-    updatedAt: timestamp("updated_at").defaultNow().$onUpdateFn(() => new Date()),
+exports.LocationAndBranchesTable = (0, pg_core_1.pgTable)("location_and_branches", {
+    locationId: (0, pg_core_1.serial)("location_id").primaryKey(),
+    name: (0, pg_core_1.varchar)("name", { length: 256 }),
+    address: (0, pg_core_1.varchar)("address", { length: 512 }),
+    contactPhone: (0, pg_core_1.varchar)("contact_phone", { length: 15 }),
+    createdAt: (0, pg_core_1.timestamp)("created_at").defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at").defaultNow().$onUpdateFn(() => new Date()),
 });
 // Location and Branches Relations
-export const locationAndBranchesRelations = relations(LocationAndBranchesTable, ({ one }) => ({
-    bookings: one(BookingsTable, {
-        fields: [LocationAndBranchesTable.locationId],
-        references: [BookingsTable.locationId]
+exports.locationAndBranchesRelations = (0, drizzle_orm_1.relations)(exports.LocationAndBranchesTable, ({ one }) => ({
+    bookings: one(exports.BookingsTable, {
+        fields: [exports.LocationAndBranchesTable.locationId],
+        references: [exports.BookingsTable.locationId]
     }),
 }));
 //Fleet Management Table
-export const FleetManagementTable = pgTable("fleet_management", {
-    fleetId: serial("fleet_id").primaryKey(),
-    vehicleId: integer("vehicle_id").notNull().references(() => VehiclesTable.vehicleSpecId, { onDelete: "cascade" }),
-    acquisitionDate: timestamp("acquisition_date"),
-    depreciationRate: varchar("depreciation_rate"),
-    currentValue: varchar("current_value"),
-    maintenanceCost: varchar("maintenance_cost"),
-    status: varchar("status", { length: 50 }),
-    createdAt: timestamp("created_at").defaultNow(),
-    updatedAt: timestamp("updated_at").defaultNow().$onUpdateFn(() => new Date()),
+exports.FleetManagementTable = (0, pg_core_1.pgTable)("fleet_management", {
+    fleetId: (0, pg_core_1.serial)("fleet_id").primaryKey(),
+    vehicleId: (0, pg_core_1.integer)("vehicle_id").notNull().references(() => exports.VehiclesTable.vehicleSpecId, { onDelete: "cascade" }),
+    acquisitionDate: (0, pg_core_1.timestamp)("acquisition_date"),
+    depreciationRate: (0, pg_core_1.varchar)("depreciation_rate"),
+    currentValue: (0, pg_core_1.varchar)("current_value"),
+    maintenanceCost: (0, pg_core_1.varchar)("maintenance_cost"),
+    status: (0, pg_core_1.varchar)("status", { length: 50 }),
+    createdAt: (0, pg_core_1.timestamp)("created_at").defaultNow(),
+    updatedAt: (0, pg_core_1.timestamp)("updated_at").defaultNow().$onUpdateFn(() => new Date()),
 });
 // Fleet Management Relations
-export const fleetManagementRelations = relations(FleetManagementTable, ({ one }) => ({
-    vehicle: one(VehiclesTable, {
-        fields: [FleetManagementTable.vehicleId],
-        references: [VehiclesTable.vehicleSpecId]
+exports.fleetManagementRelations = (0, drizzle_orm_1.relations)(exports.FleetManagementTable, ({ one }) => ({
+    vehicle: one(exports.VehiclesTable, {
+        fields: [exports.FleetManagementTable.vehicleId],
+        references: [exports.VehiclesTable.vehicleSpecId]
     }),
 }));

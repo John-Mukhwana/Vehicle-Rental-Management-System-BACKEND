@@ -1,22 +1,25 @@
-import { Hono } from "hono";
-import { listUsers, getUser, createUser, updateUser, deleteUser } from "./user.controller";
-import { zValidator } from "@hono/zod-validator";
-import { userSchema } from "../validators";
-import { userOrAdminRoleAuth, userRoleAuth } from "../middleware/bearAuth";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.userRouter = void 0;
+const hono_1 = require("hono");
+const user_controller_1 = require("./user.controller");
+const zod_validator_1 = require("@hono/zod-validator");
+const validators_1 = require("../validators");
+const bearAuth_1 = require("../middleware/bearAuth");
 // import { adminRoleAuth, userRoleAuth } from "../middleware/bearAuth";
-export const userRouter = new Hono();
+exports.userRouter = new hono_1.Hono();
 //get all users      api/users
-userRouter.get("/users", listUsers);
-userRouter.get("/users/:id", userOrAdminRoleAuth, getUser);
+exports.userRouter.get("/users", user_controller_1.listUsers);
+exports.userRouter.get("/users/:id", bearAuth_1.userOrAdminRoleAuth, user_controller_1.getUser);
 //get a single user    api/users/1s
-userRouter.get("/users/:id", userRoleAuth, getUser);
+exports.userRouter.get("/users/:id", bearAuth_1.userRoleAuth, user_controller_1.getUser);
 // create a user 
-userRouter.post("/users", zValidator('json', userSchema, (result, c) => {
+exports.userRouter.post("/users", (0, zod_validator_1.zValidator)('json', validators_1.userSchema, (result, c) => {
     if (!result.success) {
         return c.json(result.error, 400);
     }
-}), createUser);
+}), user_controller_1.createUser);
 //update a user
-userRouter.put("/users/:id", updateUser);
-userRouter.delete("/users/:id", deleteUser);
+exports.userRouter.put("/users/:id", user_controller_1.updateUser);
+exports.userRouter.delete("/users/:id", user_controller_1.deleteUser);
 //https:domai.com/api/users?limit=10

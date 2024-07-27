@@ -1,28 +1,39 @@
-import { eq } from "drizzle-orm";
-import db from "../drizzle/db";
-import { VehicleSpecificationsTable } from "../drizzle/schema";
-export const vehicleSpecificationService = async (limit) => {
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.deleteVehicleSpecificationService = exports.updateVehicleSpecificationService = exports.createVehicleSpecificationService = exports.getVehicleSpecificationService = exports.vehicleSpecificationService = void 0;
+const drizzle_orm_1 = require("drizzle-orm");
+const db_1 = __importDefault(require("../drizzle/db"));
+const schema_1 = require("../drizzle/schema");
+const vehicleSpecificationService = async (limit) => {
     if (limit) {
-        return await db.query.VehicleSpecificationsTable.findMany({
+        return await db_1.default.query.VehicleSpecificationsTable.findMany({
             limit: limit
         });
     }
-    return await db.query.VehicleSpecificationsTable.findMany();
+    return await db_1.default.query.VehicleSpecificationsTable.findMany();
 };
-export const getVehicleSpecificationService = async (id) => {
-    return await db.query.VehicleSpecificationsTable.findFirst({
-        where: eq(VehicleSpecificationsTable.vehicleId, id)
+exports.vehicleSpecificationService = vehicleSpecificationService;
+const getVehicleSpecificationService = async (id) => {
+    return await db_1.default.query.VehicleSpecificationsTable.findFirst({
+        where: (0, drizzle_orm_1.eq)(schema_1.VehicleSpecificationsTable.vehicleId, id)
     });
 };
-export const createVehicleSpecificationService = async (vehicleSpecification) => {
-    await db.insert(VehicleSpecificationsTable).values(vehicleSpecification);
+exports.getVehicleSpecificationService = getVehicleSpecificationService;
+const createVehicleSpecificationService = async (vehicleSpecification) => {
+    await db_1.default.insert(schema_1.VehicleSpecificationsTable).values(vehicleSpecification);
     return "Vehicle created successfully";
 };
-export const updateVehicleSpecificationService = async (id, vehicleSpecification) => {
-    await db.update(VehicleSpecificationsTable).set(vehicleSpecification).where(eq(VehicleSpecificationsTable.vehicleId, id));
+exports.createVehicleSpecificationService = createVehicleSpecificationService;
+const updateVehicleSpecificationService = async (id, vehicleSpecification) => {
+    await db_1.default.update(schema_1.VehicleSpecificationsTable).set(vehicleSpecification).where((0, drizzle_orm_1.eq)(schema_1.VehicleSpecificationsTable.vehicleId, id));
     return "Vehicle updated successfully";
 };
-export const deleteVehicleSpecificationService = async (id) => {
-    await db.delete(VehicleSpecificationsTable).where(eq(VehicleSpecificationsTable.vehicleId, id));
+exports.updateVehicleSpecificationService = updateVehicleSpecificationService;
+const deleteVehicleSpecificationService = async (id) => {
+    await db_1.default.delete(schema_1.VehicleSpecificationsTable).where((0, drizzle_orm_1.eq)(schema_1.VehicleSpecificationsTable.vehicleId, id));
     return "Vehicle deleted successfully";
 };
+exports.deleteVehicleSpecificationService = deleteVehicleSpecificationService;

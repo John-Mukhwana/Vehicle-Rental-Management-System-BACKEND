@@ -1,19 +1,22 @@
-import { Hono } from "hono";
-import { listLocationAndBranches, getLocationAndBranches, createLocationAndBranches, updateLocationAndBranches, deleteLocationAndBranches } from "./LocationAndBranches.controller";
-import { zValidator } from "@hono/zod-validator";
-import { locationAndBranchesSchema } from "../validators";
-import { adminRoleAuth, userOrAdminRoleAuth } from "../middleware/bearAuth";
-export const locationAndBranchesRouter = new Hono();
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.locationAndBranchesRouter = void 0;
+const hono_1 = require("hono");
+const LocationAndBranches_controller_1 = require("./LocationAndBranches.controller");
+const zod_validator_1 = require("@hono/zod-validator");
+const validators_1 = require("../validators");
+const bearAuth_1 = require("../middleware/bearAuth");
+exports.locationAndBranchesRouter = new hono_1.Hono();
 //get all users      api/users
-locationAndBranchesRouter.get("/locationAndBranches", adminRoleAuth, listLocationAndBranches);
+exports.locationAndBranchesRouter.get("/locationAndBranches", bearAuth_1.adminRoleAuth, LocationAndBranches_controller_1.listLocationAndBranches);
 //get a single user    api/users/1
-locationAndBranchesRouter.get("/locationAndBranches/:id", userOrAdminRoleAuth, getLocationAndBranches);
+exports.locationAndBranchesRouter.get("/locationAndBranches/:id", bearAuth_1.userOrAdminRoleAuth, LocationAndBranches_controller_1.getLocationAndBranches);
 // create a user 
-locationAndBranchesRouter.post("/locationAndBranches", zValidator('json', locationAndBranchesSchema, (result, c) => {
+exports.locationAndBranchesRouter.post("/locationAndBranches", (0, zod_validator_1.zValidator)('json', validators_1.locationAndBranchesSchema, (result, c) => {
     if (!result.success) {
         return c.json(result.error, 400);
     }
-}), createLocationAndBranches);
+}), LocationAndBranches_controller_1.createLocationAndBranches);
 //update a user
-locationAndBranchesRouter.put("/locationAndBranches/:id", updateLocationAndBranches);
-locationAndBranchesRouter.delete("/users/:id", deleteLocationAndBranches);
+exports.locationAndBranchesRouter.put("/locationAndBranches/:id", LocationAndBranches_controller_1.updateLocationAndBranches);
+exports.locationAndBranchesRouter.delete("/users/:id", LocationAndBranches_controller_1.deleteLocationAndBranches);

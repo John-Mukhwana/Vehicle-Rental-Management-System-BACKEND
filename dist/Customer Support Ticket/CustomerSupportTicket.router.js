@@ -1,19 +1,22 @@
-import { Hono } from "hono";
-import { listCustomerSupportTicket, createCustomerSupportTicket, getCustomerSupportTicket, updateCustmerSupportTicket, deleteCustomerSupportTicket } from "./CustomerSupportTicket.controller";
-import { zValidator } from "@hono/zod-validator";
-import { ticketSchema } from "../validators";
-import { adminRoleAuth, userOrAdminRoleAuth } from "../middleware/bearAuth";
-export const customerSupportTicketRouter = new Hono();
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.customerSupportTicketRouter = void 0;
+const hono_1 = require("hono");
+const CustomerSupportTicket_controller_1 = require("./CustomerSupportTicket.controller");
+const zod_validator_1 = require("@hono/zod-validator");
+const validators_1 = require("../validators");
+const bearAuth_1 = require("../middleware/bearAuth");
+exports.customerSupportTicketRouter = new hono_1.Hono();
 //get all users      api/users
-customerSupportTicketRouter.get("/tickets", adminRoleAuth, listCustomerSupportTicket);
+exports.customerSupportTicketRouter.get("/tickets", bearAuth_1.adminRoleAuth, CustomerSupportTicket_controller_1.listCustomerSupportTicket);
 //get a single user    api/users/1
-customerSupportTicketRouter.get("/tickets/:id", userOrAdminRoleAuth, getCustomerSupportTicket);
+exports.customerSupportTicketRouter.get("/tickets/:id", bearAuth_1.userOrAdminRoleAuth, CustomerSupportTicket_controller_1.getCustomerSupportTicket);
 // create a user 
-customerSupportTicketRouter.post("/tickets", zValidator('json', ticketSchema, (result, c) => {
+exports.customerSupportTicketRouter.post("/tickets", (0, zod_validator_1.zValidator)('json', validators_1.ticketSchema, (result, c) => {
     if (!result.success) {
         return c.json(result.error, 400);
     }
-}), createCustomerSupportTicket);
+}), CustomerSupportTicket_controller_1.createCustomerSupportTicket);
 //update a user
-customerSupportTicketRouter.put("/tickets/:id", updateCustmerSupportTicket);
-customerSupportTicketRouter.delete("/tickets/:id", deleteCustomerSupportTicket);
+exports.customerSupportTicketRouter.put("/tickets/:id", CustomerSupportTicket_controller_1.updateCustmerSupportTicket);
+exports.customerSupportTicketRouter.delete("/tickets/:id", CustomerSupportTicket_controller_1.deleteCustomerSupportTicket);

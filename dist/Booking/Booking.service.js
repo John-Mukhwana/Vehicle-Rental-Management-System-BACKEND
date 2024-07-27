@@ -1,28 +1,39 @@
-import { eq } from "drizzle-orm";
-import db from "../drizzle/db";
-import { BookingsTable } from "../drizzle/schema";
-export const bookingService = async (limit) => {
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.deleteBookingService = exports.updateBookingService = exports.createBookingService = exports.getBookingService = exports.bookingService = void 0;
+const drizzle_orm_1 = require("drizzle-orm");
+const db_1 = __importDefault(require("../drizzle/db"));
+const schema_1 = require("../drizzle/schema");
+const bookingService = async (limit) => {
     if (limit) {
-        return await db.query.BookingsTable.findMany({
+        return await db_1.default.query.BookingsTable.findMany({
             limit: limit
         });
     }
-    return await db.query.BookingsTable.findMany();
+    return await db_1.default.query.BookingsTable.findMany();
 };
-export const getBookingService = async (id) => {
-    return await db.query.BookingsTable.findFirst({
-        where: eq(BookingsTable.bookingId, id)
+exports.bookingService = bookingService;
+const getBookingService = async (id) => {
+    return await db_1.default.query.BookingsTable.findFirst({
+        where: (0, drizzle_orm_1.eq)(schema_1.BookingsTable.bookingId, id)
     });
 };
-export const createBookingService = async (Booking) => {
-    await db.insert(BookingsTable).values(Booking);
+exports.getBookingService = getBookingService;
+const createBookingService = async (Booking) => {
+    await db_1.default.insert(schema_1.BookingsTable).values(Booking);
     return "Booking created successfully";
 };
-export const updateBookingService = async (id, Booking) => {
-    await db.update(BookingsTable).set(Booking).where(eq(BookingsTable.bookingId, id));
+exports.createBookingService = createBookingService;
+const updateBookingService = async (id, Booking) => {
+    await db_1.default.update(schema_1.BookingsTable).set(Booking).where((0, drizzle_orm_1.eq)(schema_1.BookingsTable.bookingId, id));
     return "Booking updated successfully";
 };
-export const deleteBookingService = async (id) => {
-    await db.delete(BookingsTable).where(eq(BookingsTable.bookingId, id));
+exports.updateBookingService = updateBookingService;
+const deleteBookingService = async (id) => {
+    await db_1.default.delete(schema_1.BookingsTable).where((0, drizzle_orm_1.eq)(schema_1.BookingsTable.bookingId, id));
     return "Booking deleted successfully";
 };
+exports.deleteBookingService = deleteBookingService;

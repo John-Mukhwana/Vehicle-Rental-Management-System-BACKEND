@@ -1,14 +1,43 @@
-import "dotenv/config";
-import { neon } from '@neondatabase/serverless';
-import { drizzle } from 'drizzle-orm/neon-http';
-import * as schema from "./schema";
-import assert from "assert";
-import Stripe from "stripe";
-assert(process.env.DATABASE_URL, "DATABASE_URL is not set in the .env file");
-const client = neon(process.env.DATABASE_URL);
-const db = drizzle(client, { schema, logger: true }); //create a drizzle instance
-export const stripe = new Stripe(process.env.STRIPE_SECRET_API_KEY, {
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.stripe = void 0;
+require("dotenv/config");
+const serverless_1 = require("@neondatabase/serverless");
+const neon_http_1 = require("drizzle-orm/neon-http");
+const schema = __importStar(require("./schema"));
+const assert_1 = __importDefault(require("assert"));
+const stripe_1 = __importDefault(require("stripe"));
+(0, assert_1.default)(process.env.DATABASE_URL, "DATABASE_URL is not set in the .env file");
+const client = (0, serverless_1.neon)(process.env.DATABASE_URL);
+const db = (0, neon_http_1.drizzle)(client, { schema, logger: true }); //create a drizzle instance
+exports.stripe = new stripe_1.default(process.env.STRIPE_SECRET_API_KEY, {
     apiVersion: '2024-06-20',
     typescript: true
 });
-export default db;
+exports.default = db;

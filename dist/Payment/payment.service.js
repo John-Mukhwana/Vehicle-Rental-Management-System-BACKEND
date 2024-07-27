@@ -1,28 +1,39 @@
-import { eq } from "drizzle-orm";
-import db from "../drizzle/db";
-import { PaymentsTable } from "../drizzle/schema";
-export const paymentService = async (limit) => {
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.deletePaymentService = exports.updatePaymentService = exports.createPaymentService = exports.getPaymentService = exports.paymentService = void 0;
+const drizzle_orm_1 = require("drizzle-orm");
+const db_1 = __importDefault(require("../drizzle/db"));
+const schema_1 = require("../drizzle/schema");
+const paymentService = async (limit) => {
     if (limit) {
-        return await db.query.PaymentsTable.findMany({
+        return await db_1.default.query.PaymentsTable.findMany({
             limit: limit
         });
     }
-    return await db.query.PaymentsTable.findMany();
+    return await db_1.default.query.PaymentsTable.findMany();
 };
-export const getPaymentService = async (id) => {
-    return await db.query.PaymentsTable.findFirst({
-        where: eq(PaymentsTable.paymentId, id)
+exports.paymentService = paymentService;
+const getPaymentService = async (id) => {
+    return await db_1.default.query.PaymentsTable.findFirst({
+        where: (0, drizzle_orm_1.eq)(schema_1.PaymentsTable.paymentId, id)
     });
 };
-export const createPaymentService = async (payment) => {
-    await db.insert(PaymentsTable).values(payment);
+exports.getPaymentService = getPaymentService;
+const createPaymentService = async (payment) => {
+    await db_1.default.insert(schema_1.PaymentsTable).values(payment);
     return "Payment created successfully";
 };
-export const updatePaymentService = async (id, user) => {
-    await db.update(PaymentsTable).set(user).where(eq(PaymentsTable.paymentId, id));
+exports.createPaymentService = createPaymentService;
+const updatePaymentService = async (id, user) => {
+    await db_1.default.update(schema_1.PaymentsTable).set(user).where((0, drizzle_orm_1.eq)(schema_1.PaymentsTable.paymentId, id));
     return "Payment updated successfully";
 };
-export const deletePaymentService = async (id) => {
-    await db.delete(PaymentsTable).where(eq(PaymentsTable.paymentId, id));
+exports.updatePaymentService = updatePaymentService;
+const deletePaymentService = async (id) => {
+    await db_1.default.delete(schema_1.PaymentsTable).where((0, drizzle_orm_1.eq)(schema_1.PaymentsTable.paymentId, id));
     return "Payment deleted successfully";
 };
+exports.deletePaymentService = deletePaymentService;

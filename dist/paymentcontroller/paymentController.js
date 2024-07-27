@@ -1,19 +1,25 @@
+"use strict";
 // import { Context } from 'hono';
 // import Stripe from 'stripe';
 // import { createCheckoutSession, updateBookingStatus } from '../paymentservices/paymentService';
-import Stripe from 'stripe';
-import { createCheckoutSession, updateBookingStatus } from '../paymentservices/paymentService';
-const stripe = new Stripe(process.env.STRIPE_SECRET_API_KEY, {
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.stripeWebhookHandler = exports.createCheckoutSessionHandler = void 0;
+const stripe_1 = __importDefault(require("stripe"));
+const paymentService_1 = require("../paymentservices/paymentService");
+const stripe = new stripe_1.default(process.env.STRIPE_SECRET_API_KEY, {
     apiVersion: '2024-06-20',
 });
-export const createCheckoutSessionHandler = async (c) => {
+const createCheckoutSessionHandler = async (c) => {
     try {
         const body = await c.req.json();
         const { amount, currency, bookingId } = body;
         if (!amount || !currency || !bookingId) {
             return c.json({ error: 'Amount, currency, and booking ID are required' }, 400);
         }
-        const session = await createCheckoutSession(amount, currency, bookingId);
+        const session = await (0, paymentService_1.createCheckoutSession)(amount, currency, bookingId);
         return c.json({ sessionId: session.id, checkoutUrl: session.url });
     }
     catch (error) {
@@ -21,7 +27,8 @@ export const createCheckoutSessionHandler = async (c) => {
         return c.json({ error: error.message }, 400);
     }
 };
-export const stripeWebhookHandler = async (c) => {
+exports.createCheckoutSessionHandler = createCheckoutSessionHandler;
+const stripeWebhookHandler = async (c) => {
     const sig = c.req.header('stripe-signature');
     const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
     if (!sig || !webhookSecret) {
@@ -49,11 +56,12 @@ export const stripeWebhookHandler = async (c) => {
         return c.json({ error: error.message }, 400);
     }
 };
+exports.stripeWebhookHandler = stripeWebhookHandler;
 const handleCheckoutSessionCompleted = async (session) => {
     if (session.metadata) {
         const bookingId = parseInt(session.metadata.bookingId || '');
         if (bookingId) {
-            await updateBookingStatus(bookingId, 'Confirmed');
+            await (0, paymentService_1.updateBookingStatus)(bookingId, 'Confirmed');
         }
     }
 };
@@ -61,7 +69,7 @@ const handleCheckoutSessionFailed = async (session) => {
     if (session.metadata) {
         const bookingId = parseInt(session.metadata.bookingId || '');
         if (bookingId) {
-            await updateBookingStatus(bookingId, 'Cancelled');
+            await (0, paymentService_1.updateBookingStatus)(bookingId, 'Cancelled');
         }
     }
 };

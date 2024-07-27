@@ -1,28 +1,39 @@
-import { eq } from "drizzle-orm";
-import db from "../drizzle/db";
-import { LocationAndBranchesTable } from '../drizzle/schema';
-export const locationAndBranchesService = async (limit) => {
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.deleteLocationAndBranchesService = exports.updateLocationAndBranchesService = exports.createLocationAndBranchesService = exports.getLocationAndBranchesServive = exports.locationAndBranchesService = void 0;
+const drizzle_orm_1 = require("drizzle-orm");
+const db_1 = __importDefault(require("../drizzle/db"));
+const schema_1 = require("../drizzle/schema");
+const locationAndBranchesService = async (limit) => {
     if (limit) {
-        return await db.query.LocationAndBranchesTable.findMany({
+        return await db_1.default.query.LocationAndBranchesTable.findMany({
             limit: limit
         });
     }
-    return await db.query.LocationAndBranchesTable.findMany();
+    return await db_1.default.query.LocationAndBranchesTable.findMany();
 };
-export const getLocationAndBranchesServive = async (id) => {
-    return await db.query.LocationAndBranchesTable.findFirst({
-        where: eq(LocationAndBranchesTable.locationId, id)
+exports.locationAndBranchesService = locationAndBranchesService;
+const getLocationAndBranchesServive = async (id) => {
+    return await db_1.default.query.LocationAndBranchesTable.findFirst({
+        where: (0, drizzle_orm_1.eq)(schema_1.LocationAndBranchesTable.locationId, id)
     });
 };
-export const createLocationAndBranchesService = async (LocationAndBranches) => {
-    await db.insert(LocationAndBranchesTable).values(LocationAndBranches);
+exports.getLocationAndBranchesServive = getLocationAndBranchesServive;
+const createLocationAndBranchesService = async (LocationAndBranches) => {
+    await db_1.default.insert(schema_1.LocationAndBranchesTable).values(LocationAndBranches);
     return "Location And Branches created successfully";
 };
-export const updateLocationAndBranchesService = async (id, LocationAndBranches) => {
-    await db.update(LocationAndBranchesTable).set(LocationAndBranches).where(eq(LocationAndBranchesTable.locationId, id));
+exports.createLocationAndBranchesService = createLocationAndBranchesService;
+const updateLocationAndBranchesService = async (id, LocationAndBranches) => {
+    await db_1.default.update(schema_1.LocationAndBranchesTable).set(LocationAndBranches).where((0, drizzle_orm_1.eq)(schema_1.LocationAndBranchesTable.locationId, id));
     return "Location And Branches updated successfully";
 };
-export const deleteLocationAndBranchesService = async (id) => {
-    await db.delete(LocationAndBranchesTable).where(eq(LocationAndBranchesTable.locationId, id));
+exports.updateLocationAndBranchesService = updateLocationAndBranchesService;
+const deleteLocationAndBranchesService = async (id) => {
+    await db_1.default.delete(schema_1.LocationAndBranchesTable).where((0, drizzle_orm_1.eq)(schema_1.LocationAndBranchesTable.locationId, id));
     return "Location And Brnches deleted successfully";
 };
+exports.deleteLocationAndBranchesService = deleteLocationAndBranchesService;

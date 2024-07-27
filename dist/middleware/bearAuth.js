@@ -1,9 +1,12 @@
-import "dotenv/config";
-import { verify } from "hono/jwt";
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.userOrAdminRoleAuth = exports.userRoleAuth = exports.adminRoleAuth = exports.authMiddleware = exports.verifyToken = void 0;
+require("dotenv/config");
+const jwt_1 = require("hono/jwt");
 //AUTHENTICATION MIDDLEWARE
-export const verifyToken = async (token, secret) => {
+const verifyToken = async (token, secret) => {
     try {
-        const decoded = await verify(token, secret);
+        const decoded = await (0, jwt_1.verify)(token, secret);
         console.log("Decoded Token:", decoded); // Logging decoded token
         return decoded;
     }
@@ -12,8 +15,9 @@ export const verifyToken = async (token, secret) => {
         return null;
     }
 };
+exports.verifyToken = verifyToken;
 // AUTHORIZATION MIDDLEWARE
-export const authMiddleware = async (c, next, requiredRole) => {
+const authMiddleware = async (c, next, requiredRole) => {
     const authHeader = c.req.header("Authorization");
     if (!authHeader) {
         return c.json({ error: "Token not provided" }, 401);
@@ -21,7 +25,7 @@ export const authMiddleware = async (c, next, requiredRole) => {
     // Check if the token has 'Bearer' prefix
     const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : authHeader;
     console.log("Extracted Token:", token); // Logging extracted token
-    const decoded = await verifyToken(token, process.env.JWT_SECRET);
+    const decoded = await (0, exports.verifyToken)(token, process.env.JWT_SECRET);
     if (!decoded) {
         return c.json({ error: "Invalid token" }, 401);
     }
@@ -36,6 +40,10 @@ export const authMiddleware = async (c, next, requiredRole) => {
     }
     return next();
 };
-export const adminRoleAuth = async (c, next) => await authMiddleware(c, next, "admin");
-export const userRoleAuth = async (c, next) => await authMiddleware(c, next, "user");
-export const userOrAdminRoleAuth = async (c, next) => await authMiddleware(c, next, "both");
+exports.authMiddleware = authMiddleware;
+const adminRoleAuth = async (c, next) => await (0, exports.authMiddleware)(c, next, "admin");
+exports.adminRoleAuth = adminRoleAuth;
+const userRoleAuth = async (c, next) => await (0, exports.authMiddleware)(c, next, "user");
+exports.userRoleAuth = userRoleAuth;
+const userOrAdminRoleAuth = async (c, next) => await (0, exports.authMiddleware)(c, next, "both");
+exports.userOrAdminRoleAuth = userOrAdminRoleAuth;

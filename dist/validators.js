@@ -1,79 +1,82 @@
-import { z } from 'zod';
-export const userSchema = z.object({
-    userId: z.number(),
-    fullName: z.string(),
-    email: z.string(),
-    contactPhone: z.string(),
-    address: z.string(),
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.registerUserSchema = exports.loginUserSchema = exports.vehicleSchema = exports.paymentSchema = exports.locationAndBranchesSchema = exports.FleetManagementSchema = exports.ticketSchema = exports.vehicleSpecificationSchema = exports.bookingSchema = exports.userSchema = void 0;
+const zod_1 = require("zod");
+exports.userSchema = zod_1.z.object({
+    userId: zod_1.z.number(),
+    fullName: zod_1.z.string(),
+    email: zod_1.z.string(),
+    contactPhone: zod_1.z.string(),
+    address: zod_1.z.string(),
 });
-export const bookingSchema = z.object({
-    userId: z.number().min(1),
-    locationId: z.number().min(1),
-    bookingDate: z.string().refine(value => !isNaN(Date.parse(value)), {
+exports.bookingSchema = zod_1.z.object({
+    userId: zod_1.z.number().min(1),
+    locationId: zod_1.z.number().min(1),
+    bookingDate: zod_1.z.string().refine(value => !isNaN(Date.parse(value)), {
         message: "Invalid date format"
     }),
-    returnDate: z.string().refine(value => !isNaN(Date.parse(value)), {
+    returnDate: zod_1.z.string().refine(value => !isNaN(Date.parse(value)), {
         message: "Invalid date format"
     }),
-    totalAmount: z.string().min(1)
+    totalAmount: zod_1.z.string().min(1)
 });
-export const vehicleSpecificationSchema = z.object({
-    vehicleId: z.number(),
-    manufacturer: z.string(),
-    model: z.string(),
-    year: z.number(),
-    fuelType: z.string(),
-    engineCapacity: z.string(),
-    transmission: z.string(),
-    seatingCapacity: z.number(),
-    color: z.string(),
-    features: z.array(z.string()),
+exports.vehicleSpecificationSchema = zod_1.z.object({
+    vehicleId: zod_1.z.number(),
+    manufacturer: zod_1.z.string(),
+    model: zod_1.z.string(),
+    year: zod_1.z.number(),
+    fuelType: zod_1.z.string(),
+    engineCapacity: zod_1.z.string(),
+    transmission: zod_1.z.string(),
+    seatingCapacity: zod_1.z.number(),
+    color: zod_1.z.string(),
+    features: zod_1.z.array(zod_1.z.string()),
 });
-export const ticketSchema = z.object({
-    ticketId: z.number(),
-    userId: z.number(),
-    subject: z.string().nullable(),
-    description: z.string().nullable(),
-    status: z.string().nullable(),
-    createdAt: z.string(),
-    updatedAt: z.string()
+exports.ticketSchema = zod_1.z.object({
+    ticketId: zod_1.z.number(),
+    userId: zod_1.z.number(),
+    subject: zod_1.z.string().nullable(),
+    description: zod_1.z.string().nullable(),
+    status: zod_1.z.string().nullable(),
+    createdAt: zod_1.z.string(),
+    updatedAt: zod_1.z.string()
 });
-export const FleetManagementSchema = z.object({
-    fleetId: z.number(),
-    vehicleId: z.number(),
-    locationId: z.number(),
-    depreciationRate: z.string(),
-    maintenanceCost: z.string(),
-    status: z.string(),
-    createdAt: z.string(),
-    updatedAt: z.string()
+exports.FleetManagementSchema = zod_1.z.object({
+    fleetId: zod_1.z.number(),
+    vehicleId: zod_1.z.number(),
+    locationId: zod_1.z.number(),
+    depreciationRate: zod_1.z.string(),
+    maintenanceCost: zod_1.z.string(),
+    status: zod_1.z.string(),
+    createdAt: zod_1.z.string(),
+    updatedAt: zod_1.z.string()
 });
-export const locationAndBranchesSchema = z.object({
-    locationId: z.number(),
-    name: z.string(),
-    address: z.string(),
-    contactPhone: z.string(),
-    createdAt: z.string(),
-    updatedAt: z.string()
+exports.locationAndBranchesSchema = zod_1.z.object({
+    locationId: zod_1.z.number(),
+    name: zod_1.z.string(),
+    address: zod_1.z.string(),
+    contactPhone: zod_1.z.string(),
+    createdAt: zod_1.z.string(),
+    updatedAt: zod_1.z.string()
 });
-export const paymentSchema = z.object({
-    bookingId: z.number(),
-    amount: z.string(),
+exports.paymentSchema = zod_1.z.object({
+    bookingId: zod_1.z.number(),
+    amount: zod_1.z.string(),
 });
-export const vehicleSchema = z.object({
-    vehicleId: z.number(),
-    rentalRate: z.number(),
-    availability: z.string(),
-    createdAt: z.string().optional(),
-    updatedAt: z.string().optional(),
-    vehicleImage: z.string().nullable().optional(),
+exports.vehicleSchema = zod_1.z.object({
+    vehicleId: zod_1.z.number(),
+    rentalRate: zod_1.z.number(),
+    availability: zod_1.z.string(),
+    createdAt: zod_1.z.string().optional(),
+    updatedAt: zod_1.z.string().optional(),
+    vehicleImage: zod_1.z.string().nullable().optional(),
 });
-export const loginUserSchema = z.object({
-    email: z.string(),
-    password: z.string()
+exports.loginUserSchema = zod_1.z.object({
+    email: zod_1.z.string(),
+    password: zod_1.z.string()
 });
-export const registerUserSchema = z.object({
-    fullName: z.string(),
-    email: z.string(),
-    password: z.string()
+exports.registerUserSchema = zod_1.z.object({
+    fullName: zod_1.z.string(),
+    email: zod_1.z.string(),
+    password: zod_1.z.string()
 });

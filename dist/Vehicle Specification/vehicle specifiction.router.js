@@ -1,20 +1,23 @@
-import { Hono } from "hono";
-import { listVehicleSpecification, getVehicleSpecification, createVehicleSpecification, updateVehicleSpecification, deleteVehicleSpecification } from "./vehicle specification.controller";
-import { zValidator } from "@hono/zod-validator";
-import { vehicleSpecificationSchema } from "../validators";
-import { userOrAdminRoleAuth } from "../middleware/bearAuth";
-export const vehicleSpecificationRouter = new Hono();
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.vehicleSpecificationRouter = void 0;
+const hono_1 = require("hono");
+const vehicle_specification_controller_1 = require("./vehicle specification.controller");
+const zod_validator_1 = require("@hono/zod-validator");
+const validators_1 = require("../validators");
+const bearAuth_1 = require("../middleware/bearAuth");
+exports.vehicleSpecificationRouter = new hono_1.Hono();
 //get all users      api/users
-vehicleSpecificationRouter.get("/vehicleSpecifications", listVehicleSpecification);
+exports.vehicleSpecificationRouter.get("/vehicleSpecifications", vehicle_specification_controller_1.listVehicleSpecification);
 //get a single user    api/users/1
-vehicleSpecificationRouter.get("/vehicleSpecifications/:id", userOrAdminRoleAuth, getVehicleSpecification);
+exports.vehicleSpecificationRouter.get("/vehicleSpecifications/:id", bearAuth_1.userOrAdminRoleAuth, vehicle_specification_controller_1.getVehicleSpecification);
 // create a user 
-vehicleSpecificationRouter.post("/vehicleSpecifications", zValidator('json', vehicleSpecificationSchema, (result, c) => {
+exports.vehicleSpecificationRouter.post("/vehicleSpecifications", (0, zod_validator_1.zValidator)('json', validators_1.vehicleSpecificationSchema, (result, c) => {
     if (!result.success) {
         return c.json(result.error, 400);
     }
-}), createVehicleSpecification);
+}), vehicle_specification_controller_1.createVehicleSpecification);
 //update a user
-vehicleSpecificationRouter.put("/vehicleSpecifications/:id", updateVehicleSpecification);
-vehicleSpecificationRouter.delete("/vehicleSpecifications/:id", deleteVehicleSpecification);
+exports.vehicleSpecificationRouter.put("/vehicleSpecifications/:id", vehicle_specification_controller_1.updateVehicleSpecification);
+exports.vehicleSpecificationRouter.delete("/vehicleSpecifications/:id", vehicle_specification_controller_1.deleteVehicleSpecification);
 //https:domai.com/api/users?limit=10
