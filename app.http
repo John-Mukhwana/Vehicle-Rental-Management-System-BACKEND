@@ -3,9 +3,19 @@
 GET http://localhost:8000/api/ok/
 
 ###
+POST http://localhost:8000/api/create-checkout-session
+Content-Type: application/json
 
-GET http://localhost:8000/api/bookings/2
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtdWt3YW5hQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwiZXhwIjoxNzIxNjg2MjE5fQ.kWhKTuOaIDqS441O0ponfUICLjlDCLFgTaonuzYt-SI
+{  
+  "amount": 1000,
+  "currency": "usd",
+  "bookingId": 8
+
+}
+###
+
+GET http://localhost:8000/api/
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtdWt3YW5hQGdtYWlsLmNvbSIsInJvbGUiOiJ1c2VyIiwiZXhwIjoxNzIxNzM1MzY0fQ.xSz4NDMiF5gdB49_fwZIwpHXNeLI2c_zR_3eX9syaLU
 Content-Type: application/json
 
 {
@@ -45,7 +55,7 @@ POST http://localhost:8000/api/auth/login
 Content-Type: application/json
 
 {
-   "email":"jo@gmail.com",
+   "email":"mukwana@gmail.com",
     "password":"1234"
 
 }

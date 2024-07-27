@@ -15,6 +15,21 @@ vehicleRouter.post("/vehicles", zValidator('json', vehicleSchema, (result, c) =>
     }
 }), createVehicle);
 //update a user
+// vehicleRouter.put('/api/vehicles/:id', async (c) => {
+//     const vehicleId = parseInt(c.req.param('id'), 10);
+//     const vehicleData = await c.req.json(); // Get the JSON payload from the request
+//     if (!vehicleId || !vehicleData) {
+//       return c.json({ message: 'Invalid data' }, 400); // Return a 400 Bad Request if data is invalid
+//     }
+//     try {
+//       // Assuming `updateVehicleService` updates vehicle data in your database
+//       const result = await updateVehicleService(vehicleId, vehicleData);
+//       return c.json({ message: result });
+//     } catch (error) {
+//       console.error('Error updating vehicle:', error);
+//       return c.json({ message: 'Failed to update vehicle' }, 500); // Return a 500 Internal Server Error if something goes wrong
+//     }
+//   });
 vehicleRouter.put("/vehicles/:id", updateVehicle);
 vehicleRouter.delete("/vehicles/:id", deleteVehicle);
 //https:domai.com/api/users?limit=10

@@ -1,16 +1,150 @@
-// backend/src/controllers/paymentController.ts
-import { Context } from 'hono';
-import { createPaymentIntent } from '../paymentservices/paymentService';
 
-export const createPaymentIntentHandler = async (c: Context) => {
-  try {
-    const paymentData = await c.req.json();
-    const response = await createPaymentIntent(paymentData);
-    return c.json(response);
-  } catch (error) {
-    console.error(error);
-    return c.json({ error: (error as Error).message }, 500);
-  }
+// import { Context } from 'hono';
+// import Stripe from 'stripe';
+// import { createCheckoutSession, updateBookingStatus } from '../paymentservices/paymentService';
+
+// const stripe = new Stripe(process.env.STRIPE_SECRET_API_KEY as string, {
+//     apiVersion: '2024-06-20',
+// });
+
+// export const createCheckoutSessionHandler = async (c: Context) => {
+//     try {
+//         const body = await c.req.json();
+//         const { amount, currency, bookingId } = body;
+
+//         if (!amount || !currency || !bookingId) {
+//             return c.json({ error: 'Amount, currency, and booking ID are required' }, 400);
+//         }
+
+//         const session = await createCheckoutSession(amount, currency, bookingId);
+//         return c.json({ sessionId: session.id, checkoutUrl: session.url });
+//     } catch (error: any) {
+//         console.error('Error creating checkout session:', error.message);
+//         return c.json({ error: error.message }, 400);
+//     }
+// };
+
+// export const stripeWebhookHandler = async (c: Context) => {
+//     const sig = c.req.header('stripe-signature');
+//     const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+//     if (!sig || !webhookSecret) {
+//         return c.json({ error: 'Missing signature or webhook secret' }, 400);
+//     }
+
+//     try {
+//         const rawBody = await c.req.text(); // Get raw body as a string
+//         const event = stripe.webhooks.constructEvent(rawBody, sig, webhookSecret);
+
+//         switch (event.type) {
+//             case 'checkout.session.completed':
+//                 const completedSession = event.data.object as Stripe.Checkout.Session;
+//                 await handleCheckoutSessionCompleted(completedSession);
+//                 break;
+//             case 'checkout.session.async_payment_failed':
+//                 const failedSession = event.data.object as Stripe.Checkout.Session;
+//                 await handleCheckoutSessionFailed(failedSession);
+//                 break;
+//             default:
+//                 console.warn(`Unhandled event type ${event.type}`);
+//         }
+
+//         return c.json({ received: true });
+//     } catch (error: any) {
+//         console.error('Error handling webhook event:', error.message);
+//         return c.json({ error: error.message }, 400);
+//     }
+// };
+
+// const handleCheckoutSessionCompleted = async (session: Stripe.Checkout.Session) => {
+//     if (session.metadata) {
+//         const bookingId = parseInt(session.metadata.bookingId || '');
+//         if (bookingId) {
+//             await updateBookingStatus(bookingId, 'Confirmed');
+//         }
+//     }
+// };
+
+// const handleCheckoutSessionFailed = async (session: Stripe.Checkout.Session) => {
+//     if (session.metadata) {
+//         const bookingId = parseInt(session.metadata.bookingId || '');
+//         if (bookingId) {
+//             await updateBookingStatus(bookingId, 'Cancelled');
+//         }
+//     }
+// };
+import { Context } from 'hono';
+import Stripe from 'stripe';
+import { createCheckoutSession, updateBookingStatus } from '../paymentservices/paymentService';
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_API_KEY as string, {
+    apiVersion: '2024-06-20',
+});
+
+export const createCheckoutSessionHandler = async (c: Context) => {
+    try {
+        const body = await c.req.json();
+        const { amount, currency, bookingId } = body;
+
+        if (!amount || !currency || !bookingId) {
+            return c.json({ error: 'Amount, currency, and booking ID are required' }, 400);
+        }
+
+        const session = await createCheckoutSession(amount, currency, bookingId);
+        return c.json({ sessionId: session.id, checkoutUrl: session.url });
+    } catch (error: any) {
+        console.error('Error creating checkout session:', error.message);
+        return c.json({ error: error.message }, 400);
+    }
 };
 
+export const stripeWebhookHandler = async (c: Context) => {
+    const sig = c.req.header('stripe-signature');
+    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+    if (!sig || !webhookSecret) {
+        return c.json({ error: 'Missing signature or webhook secret' }, 400);
+    }
+
+    try {
+        const rawBody = await c.req.text(); // Get raw body as a string
+        const event = stripe.webhooks.constructEvent(rawBody, sig, webhookSecret);
+
+        switch (event.type) {
+            case 'checkout.session.completed':
+                const completedSession = event.data.object as Stripe.Checkout.Session;
+                await handleCheckoutSessionCompleted(completedSession);
+                break;
+            case 'checkout.session.async_payment_failed':
+                const failedSession = event.data.object as Stripe.Checkout.Session;
+                await handleCheckoutSessionFailed(failedSession);
+                break;
+            default:
+                console.warn(`Unhandled event type ${event.type}`);
+        }
+
+        return c.json({ received: true });
+    } catch (error: any) {
+        console.error('Error handling webhook event:', error.message);
+        return c.json({ error: error.message }, 400);
+    }
+};
+
+const handleCheckoutSessionCompleted = async (session: Stripe.Checkout.Session) => {
+    if (session.metadata) {
+        const bookingId = parseInt(session.metadata.bookingId || '');
+        if (bookingId) {
+            await updateBookingStatus(bookingId, 'Confirmed');
+        }
+    }
+};
+
+const handleCheckoutSessionFailed = async (session: Stripe.Checkout.Session) => {
+    if (session.metadata) {
+        const bookingId = parseInt(session.metadata.bookingId || '');
+        if (bookingId) {
+            await updateBookingStatus(bookingId, 'Cancelled');
+        }
+    }
+};
 

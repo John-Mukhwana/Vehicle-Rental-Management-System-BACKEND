@@ -29,11 +29,11 @@ export const deleteAuthenticationService = async (id) => {
 //For user registration
 export const createAuthUserService = async (user) => {
     await db.insert(AuthenticationTable).values(user);
-    return "User created successfully";
+    return "User Registered successfully";
 };
 //For user login
 export const userLoginService = async (user) => {
-    const { email, password } = user;
+    const { email, password, role } = user;
     return await db.query.AuthenticationTable.findFirst({
         columns: {
             email: true,

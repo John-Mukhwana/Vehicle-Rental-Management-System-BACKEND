@@ -19,8 +19,7 @@ import { fleetManagementRouter } from './Fleet Management/FleetManagement.router
 import { authenticationRouter } from './AuthenticationTable/Authentication.router'
 import { authRouter } from './AuthenticationTable/Authentication.router'
 import {cors} from 'hono/cors'
-import paymentsRouter from './paymentRoutes/paymentRoute';
-import webhookRouter from './paymentRoutes/webhookRoute';
+import {stripeRouter} from './paymentRoutes/paymentRoute';
 
 import  assert from 'assert' 
 
@@ -28,7 +27,7 @@ import  assert from 'assert'
 const app = new Hono().basePath('/api')
 // app.use('/*', cors())
 app.use('*', cors({
-  origin: ['http://localhost:5174','http://localhost:5173'], // Your frontend URL
+  origin: ['http://localhost:5174','http://localhost:5173','https://exotravel-afjuohsrl-john-bradill-mukhwanas-projects.vercel.app','https://exotravel.vercel.app'], // Your frontend URL
   allowMethods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowHeaders: ['Content-Type', 'Authorization'],
 }));
@@ -85,8 +84,8 @@ app.route("/",locationAndBranchesRouter)
 app.route("/",fleetManagementRouter)
 app.route("/",authenticationRouter)
 app.route("auth/", authRouter)   // api/auth/register   or api/auth/login
-app.route("/",paymentsRouter)
-app.route("/",webhookRouter)
+app.route("/",stripeRouter)
+
 
 
 assert(process.env.PORT, "PORT is not set in the .env file")

@@ -14,7 +14,6 @@ export const userSchema = z.object({
 
 export const bookingSchema = z.object({
     userId: z.number().min(1),
-    vehicleId: z.number().min(1),
     locationId: z.number().min(1),
     bookingDate: z.string().refine(value => !isNaN(Date.parse(value)), {
       message: "Invalid date format"
@@ -72,22 +71,22 @@ export const locationAndBranchesSchema = z.object({
 })
 
 export const paymentSchema = z.object({
-    paymentId: z.number(),
     bookingId: z.number(),
     amount: z.string(),
-    paymentDate: z.string(),
-    createdAt: z.string(),
-    updatedAt: z.string()
+   
 })
 
+
+
 export const vehicleSchema = z.object({
-    vehicleId: z.number(),
-    vehicleSpecId: z.number(),
-    rentalRate: z.string(),
-    availability: z.string(),
-    createdAt: z.string(),
-    updatedAt: z.string()
-})
+  vehicleId: z.number(),
+  rentalRate: z.number(),
+  availability: z.string(),
+  createdAt: z.string().optional(),
+  updatedAt: z.string().optional(),
+  vehicleImage: z.string().nullable().optional(),
+});
+
 
 export const loginUserSchema = z.object({
     email: z.string(),

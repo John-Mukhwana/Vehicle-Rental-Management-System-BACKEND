@@ -77,7 +77,7 @@ export const deleteAuthentication = async (c) => {
         return c.json({ error: error?.message }, 400);
     }
 };
-//login Aunthentication
+//Register Aunthentication
 export const registerUser = async (c) => {
     try {
         const user = await c.req.json();

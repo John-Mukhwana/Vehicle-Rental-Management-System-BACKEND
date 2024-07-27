@@ -2,13 +2,12 @@ import { Hono } from "hono";
 import { listVehicleSpecification, getVehicleSpecification, createVehicleSpecification, updateVehicleSpecification, deleteVehicleSpecification } from "./vehicle specification.controller";
 import { zValidator } from "@hono/zod-validator";
 import { vehicleSpecificationSchema } from "../validators";
-import { adminRoleAuth, userRoleAuth } from "../middleware/bearAuth";
+import { userOrAdminRoleAuth } from "../middleware/bearAuth";
 export const vehicleSpecificationRouter = new Hono();
 //get all users      api/users
-vehicleSpecificationRouter.get("/vehicleSpecifications", adminRoleAuth, listVehicleSpecification);
-vehicleSpecificationRouter.get("/vehicleSpecifications/:id", adminRoleAuth, getVehicleSpecification);
+vehicleSpecificationRouter.get("/vehicleSpecifications", listVehicleSpecification);
 //get a single user    api/users/1
-vehicleSpecificationRouter.get("/vehicleSpecifications/:id", userRoleAuth, getVehicleSpecification);
+vehicleSpecificationRouter.get("/vehicleSpecifications/:id", userOrAdminRoleAuth, getVehicleSpecification);
 // create a user 
 vehicleSpecificationRouter.post("/vehicleSpecifications", zValidator('json', vehicleSpecificationSchema, (result, c) => {
     if (!result.success) {

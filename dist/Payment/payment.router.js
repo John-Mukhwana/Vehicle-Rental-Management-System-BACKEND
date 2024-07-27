@@ -2,10 +2,10 @@ import { Hono } from "hono";
 import { listPayments, getPayment, createPayment, updatePayment, deletePayment } from "./payment.controller";
 import { zValidator } from "@hono/zod-validator";
 import { paymentSchema } from "../validators";
-import { adminRoleAuth, userOrAdminRoleAuth } from "../middleware/bearAuth";
+import { userOrAdminRoleAuth } from "../middleware/bearAuth";
 export const paymentRouter = new Hono();
 //get all users      api/users
-paymentRouter.get("/payments", adminRoleAuth, listPayments);
+paymentRouter.get("/payments", userOrAdminRoleAuth, listPayments);
 //get a single user    api/users/1
 paymentRouter.get("/payments/:id", userOrAdminRoleAuth, getPayment);
 // create a user 

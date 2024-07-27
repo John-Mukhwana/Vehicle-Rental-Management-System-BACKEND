@@ -50,6 +50,16 @@ export const updateFleetManagement = async (c) => {
     if (isNaN(id))
         return c.text("Invalid ID", 400);
     const FleetManagement = await c.req.json();
+    // Convert date strings to Date objects
+    if (FleetManagement.createdAt) {
+        FleetManagement.createdAt = new Date(FleetManagement.createdAt);
+    }
+    if (FleetManagement.updatedAt) {
+        FleetManagement.updatedAt = new Date(FleetManagement.updatedAt);
+    }
+    if (FleetManagement.acquisitionDate) {
+        FleetManagement.acquisitionDate = new Date(FleetManagement.acquisitionDate);
+    }
     try {
         // search for the user
         const searchedFleetManagement = await getFleetManagementService(id);

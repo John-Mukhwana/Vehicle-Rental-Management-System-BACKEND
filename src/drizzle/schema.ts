@@ -50,7 +50,7 @@ export const authenticationRelations = relations(AuthenticationTable, ({ one }) 
 export const VehiclesTable = pgTable("vehicles", {
     vehicleSpecId: serial("vehicle_spec_id").primaryKey(),
     vehicleId: integer("vehicle_id").notNull().references(() => VehicleSpecificationsTable.vehicleId, { onDelete: "cascade" }),
-    rentalRate: varchar("rental_rate"),
+    rentalRate: integer("rental_rate"),
     availability: varchar("availability"),
     createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at").defaultNow().$onUpdateFn(() => new Date()),
@@ -65,6 +65,7 @@ export const vehiclesRelations = relations(VehiclesTable, ({ one, many }) => ({
     }),
     bookings: many(BookingsTable),
     fleetManagement: many(FleetManagementTable),
+    payments: many(PaymentsTable),
 }));
 
 // Vehicle Specifications Table
@@ -119,6 +120,7 @@ export const paymentStatusEnum = pgEnum("payment_status", ["Pending", "Completed
 // Payments Table
 export const PaymentsTable = pgTable("payments", {
     paymentId: serial("payment_id").primaryKey(),
+    userId: integer("user_id").notNull().references(() => usersTable.userId, { onDelete: "cascade" }),
     bookingId: integer("booking_id").notNull().references(() => BookingsTable.bookingId, { onDelete: "cascade" }),
     amount: varchar("amount"),
     paymentStatus: paymentStatusEnum("payment_status").default("Pending"),
@@ -135,6 +137,10 @@ export const paymentsRelations = relations(PaymentsTable, ({ one }) => ({
         fields: [PaymentsTable.bookingId],
         references: [BookingsTable.bookingId]
     }),
+    user: one(usersTable, {
+        fields: [PaymentsTable.userId],
+        references: [usersTable.userId]
+    }),
 }));
 
 
@@ -150,6 +156,7 @@ export const CustomerSupportTicketsTable = pgTable("customer_support_tickets", {
     createdAt: timestamp("created_at").defaultNow(),
     updatedAt: timestamp("updated_at").defaultNow().$onUpdateFn(() => new Date()),
 });
+
 
 // Customer Support Tickets Relations
 export const customerSupportTicketsRelations = relations(CustomerSupportTicketsTable, ({ one }) => ({

@@ -1,5 +1,4 @@
 import { usersService, getUserService, createUserService, updateUserService, deleteUserService } from "./user.service";
-import bycrpt from 'bcrypt';
 export const listUsers = async (c) => {
     try {
         //limit the number of users to be returned
@@ -34,9 +33,6 @@ export const createUser = async (c) => {
         if (user.updatedAt) {
             user.updatedAt = new Date(user.updatedAt);
         }
-        const pass = user.password;
-        const hashedPassword = await bycrpt.hash(pass, 10);
-        user.password = hashedPassword;
         const createdUser = await createUserService(user);
         if (!createdUser)
             return c.text("User not created", 404);

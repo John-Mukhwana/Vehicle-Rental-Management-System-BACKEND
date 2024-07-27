@@ -18,8 +18,16 @@ import { locationAndBranchesRouter } from './Location And Branches/LocationAndBr
 import { fleetManagementRouter } from './Fleet Management/FleetManagement.router';
 import { authenticationRouter } from './AuthenticationTable/Authentication.router';
 import { authRouter } from './AuthenticationTable/Authentication.router';
+import { cors } from 'hono/cors';
+import { stripeRouter } from './paymentRoutes/paymentRoute';
 import assert from 'assert';
 const app = new Hono().basePath('/api');
+// app.use('/*', cors())
+app.use('*', cors({
+    origin: ['http://localhost:5174', 'http://localhost:5173', 'https://exotravel-afjuohsrl-john-bradill-mukhwanas-projects.vercel.app', 'https://exotravel.vercel.app'], // Your frontend URL
+    allowMethods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowHeaders: ['Content-Type', 'Authorization'],
+}));
 const customTimeoutException = () => new HTTPException(408, {
     message: `Request timeout after waiting for more than 10 seconds`,
 });
@@ -65,6 +73,7 @@ app.route("/", locationAndBranchesRouter);
 app.route("/", fleetManagementRouter);
 app.route("/", authenticationRouter);
 app.route("auth/", authRouter); // api/auth/register   or api/auth/login
+app.route("/", stripeRouter);
 assert(process.env.PORT, "PORT is not set in the .env file");
 serve({
     fetch: app.fetch,
