@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import { listUsers, getUser, createUser, updateUser, deleteUser } from "./user.controller"
 import { zValidator } from "@hono/zod-validator";
 import { userSchema } from "../validators";
-import { adminRoleAuth, userOrAdminRoleAuth, userRoleAuth } from "../middleware/bearAuth";
+import {  userOrAdminRoleAuth, userRoleAuth } from "../middleware/bearAuth";
 
 // import { adminRoleAuth, userRoleAuth } from "../middleware/bearAuth";
 
